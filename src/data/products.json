@@ -1,0 +1,41 @@
+[
+  {
+    "id": "1",
+    "title": "Auriculares Bluetooth",
+    "description": "Auriculares inalámbricos con cancelación de ruido",
+    "code": "AUR123",
+    "price": 12999.99,
+    "status": true,
+    "stock": 50,
+    "category": "Audio",
+    "thumbnails": [
+      "https://example.com/img/auriculares.jpg"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Auriculares Cableados",
+    "description": "Auriculares cableados sin cancelación de ruido",
+    "code": "AURC123",
+    "price": 5999.99,
+    "status": true,
+    "stock": 20,
+    "category": "Audio",
+    "thumbnails": [
+      "https://example.com/img/auriculares.jpg"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Smartphone Galaxy S22",
+    "description": "Celular Samsung con pantalla AMOLED de 6.1 pulgadas y triple cámara",
+    "code": "SAM22",
+    "price": 329999,
+    "status": true,
+    "stock": 15,
+    "category": "Electrónica",
+    "thumbnails": [
+      "https://example.com/img/galaxy-s22.jpg"
+    ]
+  }
+]
