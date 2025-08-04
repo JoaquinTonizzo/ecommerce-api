@@ -132,4 +132,9 @@ router.get('/users', authenticateToken, isAdmin, async (req, res, next) => {
   }
 });
 
+// POST /logout -> Logout
+router.post('/logout', (req, res) => {
+  res.json({ message: 'Logout exitoso. Por favor borra el token en el cliente.' });
+});
+
 export default router;
