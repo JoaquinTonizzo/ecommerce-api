@@ -1,33 +1,46 @@
-// Importamos Express (framework del servidor)
+// Importamos Express
 import express from 'express';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-// Importamos los enrutadores (rutas separadas por responsabilidad)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Lee el .env desde la raíz del proyecto
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
+// Importamos los enrutadores
 import productsRouter from './routes/products.routes.js';
 import cartsRouter from './routes/carts.routes.js';
+import loginRouter from './routes/login.routes.js';
 
-// Importamos el middleware de manejo de errores personalizado
+// Middleware de manejo de errores
 import { errorHandler } from './middlewares/error-handler.js';
 
-// Creamos la app de Express
+// Creamos la app
 const app = express();
 
-// Definimos el puerto en el que va a escuchar el servidor
-const PORT = 8080;
+// Puerto desde variables de entorno
+const PORT = process.env.PORT;
 
-// Middleware para que Express entienda JSON en el body de las peticiones
+// Middleware para que Express entienda JSON
 app.use(express.json());
 
-// Rutas principales de la API:
-// Todo lo que empiece con /api/products va a ser manejado por productsRouter
+// Rutas de la API
 app.use('/api/products', productsRouter);
-
-// Todo lo que empiece con /api/carts va a ser manejado por cartsRouter
 app.use('/api/carts', cartsRouter);
+app.use('/api/auth', loginRouter);
 
-// Middleware de manejo de errores personalizado. SIEMPRE después de las rutas
+// Ruta de prueba
+app.get('/', (req, res) => {
+  res.send('API funcionando correctamente 🚀');
+});
+
+// Middleware global de errores (debe ir al final del flujo)
 app.use(errorHandler);
 
-// Iniciamos el servidor y lo ponemos a escuchar en el puerto indicado
+// Arrancamos el servidor
 app.listen(PORT, () => {
-  console.log(`Servidor escuchando en http://localhost:${PORT}`);
+  console.log(`✅ Servidor escuchando en http://localhost:${PORT}`);
 });
