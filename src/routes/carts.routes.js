@@ -37,10 +37,17 @@ router.get('/:cid', authenticateToken, async (req, res, next) => {
 });
 
 // POST /api/carts/:cid/product/:pid => Agregar producto al carrito
-router.post('/:cid/product/:pid', async (req, res, next) => {
+router.post('/:cid/product/:pid', authenticateToken, async (req, res, next) => {
   try {
+    const cart = await manager.getCartById(req.params.cid);
+    if (!cart) return res.status(404).json({ error: 'Carrito no encontrado' });
+
+    // Validar que el carrito pertenezca al usuario autenticado
+    if (cart.userId !== req.user.id) {
+      return res.status(403).json({ error: 'No autorizado para modificar este carrito' });
+    }
+
     const updatedCart = await manager.addProductToCart(req.params.cid, req.params.pid);
-    if (!updatedCart) return res.status(404).json({ error: 'Carrito no encontrado' });
     res.json(updatedCart);
   } catch (error) {
     if (error.message === 'Producto no encontrado') {
@@ -52,8 +59,15 @@ router.post('/:cid/product/:pid', async (req, res, next) => {
 
 
 // DELETE /api/carts/:cid/product/:pid => Quitar producto del carrito
-router.delete('/:cid/product/:pid', async (req, res, next) => {
+router.delete('/:cid/product/:pid', authenticateToken, async (req, res, next) => {
   try {
+    const cart = await manager.getCartById(req.params.cid);
+    if (!cart) return res.status(404).json({ error: 'Carrito no encontrado' });
+
+    if (cart.userId !== req.user.id) {
+      return res.status(403).json({ error: 'No autorizado para modificar este carrito' });
+    }
+
     const updatedCart = await manager.removeProductFromCart(req.params.cid, req.params.pid);
     res.json(updatedCart);
   } catch (error) {
