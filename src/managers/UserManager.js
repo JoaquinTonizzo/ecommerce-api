@@ -38,6 +38,12 @@ class UserManager {
   async addUser(userData) {
     await this.loadUsers();
 
+    // Obtener último ID numérico para incrementar
+    const lastId = this.users.length > 0
+      ? Math.max(...this.users.map(u => parseInt(u.id)))
+      : 0;
+    const newId = (lastId + 1).toString();
+
     const existingUser = this.users.find(user => user.email === userData.email);
     if (existingUser) {
       throw new Error('El email ya está registrado');
@@ -47,7 +53,7 @@ class UserManager {
     const hashedPassword = await bcrypt.hash(userData.password, 10);
 
     const newUser = {
-      id: Date.now().toString(),
+      id: newId,
       email: userData.email,
       password: hashedPassword,
       firstName: userData.firstName,

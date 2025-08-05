@@ -1,13 +1,18 @@
 import express from 'express';
 import cartManager from '../managers/CartManager.js';
+import { authenticateToken } from '../middlewares/auth.js';
 
 const router = express.Router();
 const manager = cartManager;
 
 // POST /api/carts/ => Crear nuevo carrito
-router.post('/', async (req, res, next) => {
+router.post('/', authenticateToken, async (req, res, next) => {
   try {
-    const newCart = await manager.createCart();
+    const userId = req.user.id; // viene del token JWT
+    const existing = await manager.getCartByUserId(userId);
+    if (existing) return res.status(409).json({ error: 'El usuario ya tiene un carrito' });
+
+    const newCart = await manager.createCart(userId);
     res.status(201).json(newCart);
   } catch (error) {
     next(error);
@@ -15,10 +20,16 @@ router.post('/', async (req, res, next) => {
 });
 
 // GET /api/carts/:cid => Obtener productos del carrito
-router.get('/:cid', async (req, res, next) => {
+router.get('/:cid', authenticateToken, async (req, res, next) => {
   try {
     const cart = await manager.getCartById(req.params.cid);
     if (!cart) return res.status(404).json({ error: 'Carrito no encontrado' });
+
+    // Solo el dueño o admin
+    if (req.user.id !== cart.userId && req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'No tienes permiso para ver este carrito' });
+    }
+
     res.json(cart.products);
   } catch (error) {
     next(error);

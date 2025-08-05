@@ -31,8 +31,12 @@ class CartManager {
     }
   }
 
-  // Crea un carrito nuevo con ID incremental y lista vacía de productos
-  async createCart() {
+  async getCartByUserId(userId) {
+    const carts = await this.getCarts();
+    return carts.find(c => c.userId === userId);
+  }
+
+  async createCart(userId) {
     const carts = await this.getCarts();
 
     // Determina el ID más alto actual y suma 1
@@ -42,6 +46,7 @@ class CartManager {
 
     const newCart = {
       id: newId,
+      userId: userId,
       products: [],
     };
 
