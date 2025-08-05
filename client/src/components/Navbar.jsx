@@ -1,8 +1,25 @@
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Navbar() {
+function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+    const [user, setUser] = useState(null);
+    const [profileOpen, setProfileOpen] = useState(false);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                setUser(payload);
+            } catch {
+                setUser(null);
+            }
+        } else {
+            setUser(null);
+        }
+    }, []);
 
     return (
         <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -73,27 +90,58 @@ export default function Navbar() {
                                 Cart
                             </Link>
                         </li>
-                        <li>
-                            <Link
-                                to="/login"
-                                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                                onClick={() => setIsOpen(false)}
-                            >
-                                Login
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                to="/register"
-                                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                                onClick={() => setIsOpen(false)}
-                            >
-                                Registrarse
-                            </Link>
-                        </li>
+                        {!user && (
+                            <>
+                                <li>
+                                    <Link
+                                        to="/login"
+                                        className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                                        onClick={() => setIsOpen(false)}
+                                    >
+                                        Login
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        to="/register"
+                                        className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                                        onClick={() => setIsOpen(false)}
+                                    >
+                                        Registrarse
+                                    </Link>
+                                </li>
+                            </>
+                        )}
+                        {user && (
+                            <li className="relative">
+                                <button
+                                    className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent font-semibold"
+                                    onClick={() => setProfileOpen((open) => !open)}
+                                >
+                                    Perfil
+                                </button>
+                                {profileOpen && (
+                                    <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4 z-50">
+                                        <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">Email: {user.email}</div>
+                                        <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">Rol: {user.role}</div>
+                                        <button
+                                            onClick={() => {
+                                                localStorage.removeItem('token');
+                                                window.location.reload();
+                                            }}
+                                            className="mt-3 w-full px-4 py-2 rounded bg-red-600 text-white font-semibold hover:bg-red-700 transition"
+                                        >
+                                            Cerrar sesión
+                                        </button>
+                                    </div>
+                                )}
+                            </li>
+                        )}
                     </ul>
                 </div>
             </div>
         </nav>
     );
 }
+
+export default Navbar;
