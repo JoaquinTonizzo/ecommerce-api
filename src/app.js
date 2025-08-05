@@ -22,6 +22,10 @@ import { errorHandler } from './middlewares/error-handler.js';
 // Creamos la app
 const app = express();
 
+// Habilitar CORS para permitir peticiones desde el frontend Angular
+import cors from 'cors';
+app.use(cors({ origin: 'http://localhost:4200' }));
+
 // Puerto desde variables de entorno
 const PORT = process.env.PORT;
 
