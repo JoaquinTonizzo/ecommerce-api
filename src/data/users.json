@@ -1,5 +1,13 @@
 [
   {
+    "id": 1,
+    "email": "admin@admin.com",
+    "password": "$2b$10$.s7DBAjPv7y1suREgobJXuvR/3ZsH55Au3bYeawL2YdEyNBJlKn1.",
+    "firstName": "Admin",
+    "lastName": "User",
+    "role": "admin"
+  },
+  {
     "id": "1754350102484",
     "email": "user1@example.com",
     "password": "$2b$10$.s7DBAjPv7y1suREgobJXuvR/3ZsH55Au3bYeawL2YdEyNBJlKn1.",
@@ -7,5 +15,21 @@
     "lastName": "Pérez",
     "role": "admin",
     "createdAt": "2025-08-04T23:28:22.484Z"
+  },
+  {
+    "id": "c3f0de5b-6798-481f-bab8-53402b03a992",
+    "email": "nuevoadmin@ejemplo.com",
+    "password": "$2b$10$K6jyaBLqEBJx7k6p8q7H/eKngymdWo1bWotdS2lSAGr/TwjRxHSq2",
+    "firstName": "Nuevo",
+    "lastName": "Admin",
+    "role": "user"
+  },
+  {
+    "id": "c9afd795-a840-4e36-b48e-04ded4c5f681",
+    "email": "nuevoadmin@ejemplo11.com",
+    "password": "$2b$10$cuw9hUA5XuHkh.ZiDpypo.L0ve/EJxTal9rOpHR8PRS9.2ZagA5v2",
+    "firstName": "Nuevo",
+    "lastName": "Admin",
+    "role": "user"
   }
 ]

@@ -14,6 +14,7 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 import productsRouter from './routes/products.routes.js';
 import cartsRouter from './routes/carts.routes.js';
 import loginRouter from './routes/login.routes.js';
+import adminRoutes from './routes/admin.routes.js';
 
 // Middleware de manejo de errores
 import { errorHandler } from './middlewares/error-handler.js';
@@ -31,6 +32,7 @@ app.use(express.json());
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/api/auth', loginRouter);
+app.use('/api/admin', adminRoutes);
 
 // Ruta de prueba
 app.get('/', (req, res) => {
