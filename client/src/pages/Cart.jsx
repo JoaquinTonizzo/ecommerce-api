@@ -116,7 +116,16 @@ export default function Cart() {
     }
 
     if (loading) return <div className="p-6 text-center">Cargando carrito...</div>;
-    if (error) return <div className="p-6 text-center text-red-600">{error}</div>;
+    if (error) {
+        return (
+            <main className="min-h-screen w-full bg-gray-50 dark:bg-gray-900 px-6 py-12">
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded max-w-2xl mx-auto text-center shadow">
+                    <strong className="font-bold">Error: </strong>
+                    <span className="block sm:inline">{error}</span>
+                </div>
+            </main>
+        );
+    }
 
     return (
         <main className="min-h-screen w-full bg-gray-50 dark:bg-gray-900 px-6 py-12">
