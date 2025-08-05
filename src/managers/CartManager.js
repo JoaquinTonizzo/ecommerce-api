@@ -263,7 +263,7 @@ class CartManager {
 
   async getPurchaseHistoryByUserId(userId) {
     const carts = await this.getCarts();
-    return carts.filter(cart => cart.userId === userId && cart.status === "paid");
+    return carts.filter(cart => cart.userId === userId);
   }
 }
 
