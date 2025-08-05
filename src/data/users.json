@@ -1,11 +1,2 @@
 [
-  {
-    "id": "1",
-    "email": "nuevoadmin@ejemplo11.com",
-    "password": "$2b$10$YZoHlvSKTSp1m9fkyxR1e.Yj6tVf4oFLpxzooT84N2sUBefeqtJoy",
-    "firstName": "Nuevo",
-    "lastName": "Admin",
-    "role": "user",
-    "createdAt": "2025-08-05T13:05:28.007Z"
-  }
 ]
