@@ -80,11 +80,20 @@ class CartManager {
       (p) => p.product === productId
     );
 
-    // Si el producto ya está en el carrito, aumenta la cantidad
+    // Validar stock al agregar o incrementar cantidad
     if (productIndex !== -1) {
+      if (cart.products[productIndex].quantity + 1 > product.stock) {
+        const error = new Error('Cantidad supera stock disponible');
+        error.status = 400;
+        throw error;
+      }
       cart.products[productIndex].quantity += 1;
     } else {
-      // Si no está, lo agrega con cantidad 1
+      if (product.stock < 1) {
+        const error = new Error('Producto sin stock disponible');
+        error.status = 400;
+        throw error;
+      }
       cart.products.push({ product: productId, quantity: 1 });
     }
 
@@ -131,6 +140,31 @@ class CartManager {
     await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 2));
 
     return cart;
+  }
+
+  // Quitar un producto a un carrito existente
+  async updateProductQuantity(cartId, productId, quantity) {
+    const carts = await this.getCarts();
+    const cartIndex = carts.findIndex(c => c.id === cartId);
+    if (cartIndex === -1) return null;
+
+    const productIndex = carts[cartIndex].products.findIndex(p => p.product === productId);
+    if (productIndex === -1) return null;
+
+    // Validar stock con productManager
+    const product = await productManager.getProductById(productId);
+    if (!product) {
+      throw new Error('Producto no encontrado');
+    }
+
+    if (quantity > product.stock) {
+      throw new Error('Cantidad supera stock disponible');
+    }
+
+    carts[cartIndex].products[productIndex].quantity = quantity;
+
+    await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 2));
+    return carts[cartIndex];
   }
 }
 

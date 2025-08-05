@@ -50,13 +50,16 @@ router.post('/:cid/product/:pid', authenticateToken, async (req, res, next) => {
     const updatedCart = await manager.addProductToCart(req.params.cid, req.params.pid);
     res.json(updatedCart);
   } catch (error) {
-    if (error.message === 'Producto no encontrado') {
-      return res.status(404).json({ error: error.message });
+    if (
+      error.message === 'Producto no encontrado' ||
+      error.message === 'Cantidad supera stock disponible' ||
+      error.message === 'Producto sin stock disponible'
+    ) {
+      return res.status(400).json({ error: error.message });
     }
     next(error);
   }
 });
-
 
 // DELETE /api/carts/:cid/product/:pid => Quitar producto del carrito
 router.delete('/:cid/product/:pid', authenticateToken, async (req, res, next) => {
@@ -73,6 +76,39 @@ router.delete('/:cid/product/:pid', authenticateToken, async (req, res, next) =>
   } catch (error) {
     if (error.message === 'Carrito no encontrado' || error.message === 'Producto no encontrado en el carrito') {
       return res.status(404).json({ error: error.message });
+    }
+    next(error);
+  }
+});
+
+// PUT /api/carts/:cid/product/:pid => Actualizar cantidad de producto en carrito
+router.put('/:cid/product/:pid', authenticateToken, async (req, res, next) => {
+  try {
+    const cart = await manager.getCartById(req.params.cid);
+    if (!cart) return res.status(404).json({ error: 'Carrito no encontrado' });
+
+    if (cart.userId !== req.user.id) {
+      return res.status(403).json({ error: 'No autorizado para modificar este carrito' });
+    }
+
+    const { quantity } = req.body;
+    if (typeof quantity !== 'number' || quantity < 1) {
+      return res.status(400).json({ error: 'Cantidad inválida. Debe ser un número entero mayor o igual a 1.' });
+    }
+
+    const updatedCart = await manager.updateProductQuantity(req.params.cid, req.params.pid, quantity);
+
+    if (!updatedCart) {
+      return res.status(404).json({ error: 'Producto no encontrado en el carrito' });
+    }
+
+    res.json(updatedCart);
+  } catch (error) {
+    if (
+      error.message === 'Producto no encontrado' ||
+      error.message === 'Cantidad supera stock disponible'
+    ) {
+      return res.status(400).json({ error: error.message });
     }
     next(error);
   }
