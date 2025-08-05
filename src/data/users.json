@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "id": "1",
+    "email": "usuario@gmail.com",
+    "password": "$2b$10$hjJQrqRq5KmorUdhghP1Y.evBgCInfox5cWIN3CbV/5LDdxFghUl.",
+    "firstName": "Usuario",
+    "lastName": "Test",
+    "role": "user",
+    "createdAt": "2025-08-05T21:12:43.550Z"
+  }
+]

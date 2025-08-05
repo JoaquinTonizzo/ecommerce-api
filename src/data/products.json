@@ -6,7 +6,7 @@
     "code": "AUR123",
     "price": 12999.99,
     "status": true,
-    "stock": 40,
+    "stock": 38,
     "category": "Audio",
     "thumbnails": []
   },
@@ -17,7 +17,7 @@
     "code": "AURC123",
     "price": 5999.99,
     "status": true,
-    "stock": 20,
+    "stock": 18,
     "category": "Audio",
     "thumbnails": []
   },

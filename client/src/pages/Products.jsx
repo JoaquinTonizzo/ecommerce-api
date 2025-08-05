@@ -66,6 +66,47 @@ export default function Products() {
         );
     }
 
+    async function handleAddToCart(producto) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Debes iniciar sesión para agregar productos al carrito');
+            return;
+        }
+
+        try {
+            // Obtener historial
+            const historyRes = await fetch('http://localhost:8080/api/carts/history', {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const history = await historyRes.json();
+            if (!historyRes.ok) throw new Error(history.error || 'Error al obtener historial de carritos');
+
+            // Buscar carrito en progreso o crear uno
+            let carritoEnProgreso = history.find(c => c.status !== 'paid');
+            if (!carritoEnProgreso) {
+                const createRes = await fetch('http://localhost:8080/api/carts', {
+                    method: 'POST',
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                const nuevoCarrito = await createRes.json();
+                if (!createRes.ok) throw new Error(nuevoCarrito.error || 'Error al crear carrito');
+                carritoEnProgreso = nuevoCarrito;
+            }
+
+            // Agregar producto al carrito
+            const addRes = await fetch(`http://localhost:8080/api/carts/${carritoEnProgreso.id}/product/${producto.id}`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const addData = await addRes.json();
+            if (!addRes.ok) throw new Error(addData.error || 'Error al agregar producto al carrito');
+
+            alert('Producto agregado al carrito');
+        } catch (err) {
+            alert(err.message);
+        }
+    }
+
     return (
         <main className="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-12">
             <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-10 text-center animate-fadeInDown">
@@ -92,7 +133,10 @@ export default function Products() {
                         </div>
 
                         <button
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddToCart(producto);
+                            }}
                             className="mt-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition-colors"
                         >
                             Agregar al carrito

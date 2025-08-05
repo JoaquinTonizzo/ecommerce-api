@@ -26,7 +26,24 @@
   {
     "id": "3",
     "userId": "1",
+    "products": [
+      {
+        "productId": "2",
+        "quantity": 2
+      },
+      {
+        "productId": "1",
+        "quantity": 2
+      }
+    ],
+    "status": "paid",
+    "paidAt": "2025-08-05T21:25:13.019Z"
+  },
+  {
+    "id": "4",
+    "userId": "1",
     "products": [],
-    "status": "in_progress"
+    "status": "in_progress",
+    "createdAt": "2025-08-05T21:25:53.825Z"
   }
 ]

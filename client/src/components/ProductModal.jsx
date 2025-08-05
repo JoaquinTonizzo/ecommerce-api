@@ -41,13 +41,6 @@ export default function ProductModal({ producto, onClose, onAddToCart }) {
                         >
                             Cerrar
                         </button>
-
-                        <button
-                            onClick={() => onAddToCart(producto)}
-                            className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition"
-                        >
-                            Agregar al carrito
-                        </button>
                     </div>
                 </div>
             </div>
