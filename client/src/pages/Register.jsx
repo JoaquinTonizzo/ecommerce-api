@@ -50,7 +50,7 @@ export default function Register() {
     if (isLoggedIn) {
         return (
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
-                <div className="max-w-md w-full p-6 bg-white dark:bg-gray-800 rounded shadow text-center">
+                <div className="animate-fadeInDown max-w-md w-full p-6 bg-white dark:bg-gray-800 rounded shadow text-center">
                     <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
                         Ya has iniciado sesión
                     </h2>
@@ -77,7 +77,7 @@ export default function Register() {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
-            <div className="max-w-md w-full p-6 bg-white dark:bg-gray-800 rounded shadow">
+            <div className="animate-fadeInDown max-w-md w-full p-6 bg-white dark:bg-gray-800 rounded shadow">
                 <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Registrarse</h2>
 
                 {error && <p className="mb-4 text-red-600 dark:text-red-400">{error}</p>}

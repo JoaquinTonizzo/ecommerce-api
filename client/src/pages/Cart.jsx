@@ -119,7 +119,7 @@ export default function Cart() {
     if (error) {
         return (
             <main className="min-h-screen w-full bg-gray-50 dark:bg-gray-900 px-6 py-12">
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded max-w-2xl mx-auto text-center shadow">
+                <div className="animate-fadeInDown bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded max-w-2xl mx-auto text-center shadow">
                     <strong className="font-bold">Error: </strong>
                     <span className="block sm:inline">{error}</span>
                 </div>
@@ -129,7 +129,7 @@ export default function Cart() {
 
     return (
         <main className="min-h-screen w-full bg-gray-50 dark:bg-gray-900 px-6 py-12">
-            <h1 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Tu Carrito</h1>
+            <h1 className="animate-fadeInDown text-3xl font-bold mb-8 text-gray-900 dark:text-white">Tu Carrito</h1>
 
             {products.length ? (
                 <>
@@ -137,7 +137,7 @@ export default function Cart() {
                         {products.map((p) => (
                             <li
                                 key={p.id}
-                                className="bg-white dark:bg-gray-800 p-4 rounded shadow flex items-center justify-between"
+                                className="animate-fadeInDown bg-white dark:bg-gray-800 p-4 rounded shadow flex items-center justify-between"
                             >
                                 <div>
                                     <h2 className="font-semibold text-lg text-gray-900 dark:text-white">{p.title}</h2>
@@ -153,7 +153,7 @@ export default function Cart() {
                         ))}
                     </ul>
 
-                    <div className="mt-8 flex justify-between items-center max-w-3xl mx-auto">
+                    <div className="animate-fadeInDown mt-8 flex justify-between items-center max-w-3xl mx-auto">
                         <p className="text-xl font-bold text-gray-900 dark:text-white">Total: ${total.toFixed(2)}</p>
                         <button
                             onClick={async () => {
@@ -178,10 +178,10 @@ export default function Cart() {
                     </div>
                 </>
             ) : (
-                <p className="text-center text-gray-600 dark:text-gray-300">Tu carrito actual está vacío.</p>
+                <p className="animate-fadeInDown text-center text-gray-600 dark:text-gray-300">Tu carrito actual está vacío.</p>
             )}
 
-            <div className="mt-10 text-center max-w-3xl mx-auto">
+            <div className="animate-fadeInDown mt-10 text-center max-w-3xl mx-auto">
                 {!historialVisible ? (
                     <button
                         onClick={cargarHistorial}
@@ -193,13 +193,13 @@ export default function Cart() {
                     <>
                         <button
                             onClick={() => setHistorialVisible(false)}
-                            className="text-red-600 hover:underline font-medium mb-4"
+                            className="animate-fadeInDown text-red-600 hover:underline font-medium mb-4"
                         >
                             Ocultar historial
                         </button>
-                        <h2 className="text-xl font-semibold mt-4 mb-4 text-gray-900 dark:text-white">Historial de Compras</h2>
+                        <h2 className="animate-fadeInDown text-xl font-semibold mt-4 mb-4 text-gray-900 dark:text-white">Historial de Compras</h2>
                         {historialCarritos.length ? (
-                            <ul className="space-y-4">
+                            <ul className="animate-fadeInDown space-y-4">
                                 {historialCarritos.map((carrito) => {
                                     const expanded = expandedHistorial[carrito.id];
                                     return (

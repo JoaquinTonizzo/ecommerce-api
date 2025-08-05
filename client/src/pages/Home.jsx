@@ -10,7 +10,7 @@ export default function Home() {
                 La mejor experiencia para comprar tus productos favoritos de forma rápida y segura.
             </p>
 
-            <div className="flex flex-wrap justify-center gap-10 max-w-4xl animate-fadeInUp delay-200">
+            <div className="flex flex-wrap justify-center gap-10 max-w-4xl animate-fadeInDown delay-200">
                 {/* Seguridad */}
                 <div className="flex flex-col items-center w-48 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                     <FaShieldAlt className="w-12 h-12 mb-4 text-blue-600 dark:text-blue-400" />
