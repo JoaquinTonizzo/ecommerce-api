@@ -8,9 +8,7 @@
     "status": true,
     "stock": 40,
     "category": "Audio",
-    "thumbnails": [
-      "https://example.com/img/auriculares.jpg"
-    ]
+    "thumbnails": []
   },
   {
     "id": "2",
@@ -21,9 +19,7 @@
     "status": true,
     "stock": 20,
     "category": "Audio",
-    "thumbnails": [
-      "https://example.com/img/auriculares.jpg"
-    ]
+    "thumbnails": []
   },
   {
     "id": "3",
@@ -34,8 +30,83 @@
     "status": true,
     "stock": 13,
     "category": "Electrónica",
-    "thumbnails": [
-      "https://example.com/img/galaxy-s22.jpg"
-    ]
+    "thumbnails": []
+  },
+  {
+    "id": "4",
+    "title": "Laptop Gamer XYZ",
+    "description": "Laptop potente con procesador Intel i7 y tarjeta gráfica RTX 3060",
+    "code": "LAPG123",
+    "price": 159999,
+    "status": true,
+    "stock": 7,
+    "category": "Computación",
+    "thumbnails": []
+  },
+  {
+    "id": "5",
+    "title": "Monitor 27 pulgadas 4K",
+    "description": "Monitor UHD con alta fidelidad de color para diseño gráfico",
+    "code": "MON27UHD",
+    "price": 49999.99,
+    "status": true,
+    "stock": 25,
+    "category": "Computación",
+    "thumbnails": []
+  },
+  {
+    "id": "6",
+    "title": "Teclado Mecánico RGB",
+    "description": "Teclado con switches táctiles y retroiluminación RGB personalizable",
+    "code": "TECMECRGB",
+    "price": 8999.99,
+    "status": true,
+    "stock": 30,
+    "category": "Accesorios",
+    "thumbnails": []
+  },
+  {
+    "id": "7",
+    "title": "Mouse Inalámbrico Ergonomico",
+    "description": "Mouse con diseño ergonómico y conexión bluetooth estable",
+    "code": "MOUERGO",
+    "price": 5999.99,
+    "status": true,
+    "stock": 50,
+    "category": "Accesorios",
+    "thumbnails": []
+  },
+  {
+    "id": "8",
+    "title": "Smartwatch Deportivo",
+    "description": "Reloj inteligente con monitor de ritmo cardíaco y GPS integrado",
+    "code": "SMRTWCH",
+    "price": 19999.99,
+    "status": true,
+    "stock": 18,
+    "category": "Wearables",
+    "thumbnails": []
+  },
+  {
+    "id": "9",
+    "title": "Cámara de Seguridad IP",
+    "description": "Cámara con visión nocturna y conectividad Wi-Fi",
+    "code": "CAMIPSEC",
+    "price": 7499.99,
+    "status": true,
+    "stock": 12,
+    "category": "Seguridad",
+    "thumbnails": []
+  },
+  {
+    "id": "10",
+    "title": "Tablet 10 pulgadas",
+    "description": "Tablet con pantalla HD, batería de larga duración y cámara frontal",
+    "code": "TAB10HD",
+    "price": 29999.99,
+    "status": true,
+    "stock": 22,
+    "category": "Electrónica",
+    "thumbnails": []
   }
 ]

@@ -24,7 +24,7 @@ const app = express();
 
 // Habilitar CORS para permitir peticiones desde el frontend Angular
 import cors from 'cors';
-app.use(cors({ origin: 'http://localhost:4200' }));
+app.use(cors({ origin: 'http://localhost:5173' }));
 
 // Puerto desde variables de entorno
 const PORT = process.env.PORT;
