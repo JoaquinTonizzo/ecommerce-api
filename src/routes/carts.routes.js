@@ -19,6 +19,17 @@ router.post('/', authenticateToken, async (req, res, next) => {
   }
 });
 
+// GET /api/carts/history => Obtener historial de pedidos pagados del usuario
+router.get('/history', authenticateToken, async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const history = await manager.getPurchaseHistoryByUserId(userId);
+    res.json(history);
+  } catch (error) {
+    next(error);
+  }
+});
+
 // GET /api/carts/:cid => Obtener productos del carrito
 router.get('/:cid', authenticateToken, async (req, res, next) => {
   try {
@@ -130,6 +141,29 @@ router.delete('/:cid', authenticateToken, async (req, res, next) => {
     res.json({ message: 'Carrito eliminado correctamente' });
   } catch (error) {
     next(error);
+  }
+});
+
+// POST /api/carts/:cid/pay => Pagar el carrito
+router.post('/:cid/pay', authenticateToken, async (req, res, next) => {
+  try {
+    const cart = await manager.getCartById(req.params.cid);
+
+    // Validar que el carrito pertenezca al usuario autenticado o sea admin
+    if (cart.userId !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'No autorizado para pagar este carrito' });
+    }
+
+    const result = await manager.payCart(req.params.cid);
+    res.json({ message: 'Carrito pagado correctamente', cart: result });
+  } catch (error) {
+    if (error.status) {
+      // Si el error tiene status, lo usás para responder
+      res.status(error.status).json({ error: error.message });
+    } else {
+      // Si es otro error inesperado, lo pasás al middleware de manejo de errores
+      next(error);
+    }
   }
 });
 

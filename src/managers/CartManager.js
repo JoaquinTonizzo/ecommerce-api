@@ -33,7 +33,7 @@ class CartManager {
 
   async getCartByUserId(userId) {
     const carts = await this.getCarts();
-    return carts.find(c => c.userId === userId);
+    return carts.find(c => c.userId === userId && c.status === "in_progress");
   }
 
   async createCart(userId) {
@@ -48,6 +48,9 @@ class CartManager {
       id: newId,
       userId: userId,
       products: [],
+      status: "in_progress",
+      createdAt: new Date().toISOString()
+
     };
 
     carts.push(newCart);
@@ -76,8 +79,15 @@ class CartManager {
     }
 
     const cart = carts[cartIndex];
+
+    if (cart.status !== 'in_progress') {
+      const error = new Error('No se puede modificar un carrito que ya fue pagado.');
+      error.status = 400;
+      throw error;
+    }
+
     const productIndex = cart.products.findIndex(
-      (p) => p.product === productId
+      (p) => p.productId === productId
     );
 
     // Validar stock al agregar o incrementar cantidad
@@ -94,7 +104,7 @@ class CartManager {
         error.status = 400;
         throw error;
       }
-      cart.products.push({ product: productId, quantity: 1 });
+      cart.products.push({ productId: productId, quantity: 1 });
     }
 
     // Actualiza el carrito en la lista y escribe el archivo
@@ -116,6 +126,13 @@ class CartManager {
     }
 
     const cart = carts[cartIndex];
+
+    if (cart.status !== 'in_progress') {
+      const error = new Error('No se puede modificar un carrito que ya fue pagado.');
+      error.status = 400;
+      throw error;
+    }
+
     const productIndex = cart.products.findIndex(
       (p) => p.product === productId
     );
@@ -148,7 +165,15 @@ class CartManager {
     const cartIndex = carts.findIndex(c => c.id === cartId);
     if (cartIndex === -1) return null;
 
-    const productIndex = carts[cartIndex].products.findIndex(p => p.product === productId);
+    const cart = carts[cartIndex];
+
+    if (cart.status !== 'in_progress') {
+      const error = new Error('No se puede modificar un carrito que ya fue pagado.');
+      error.status = 400;
+      throw error;
+    }
+
+    const productIndex = cart.products.findIndex(p => p.product === productId);
     if (productIndex === -1) return null;
 
     // Validar stock con productManager
@@ -161,13 +186,35 @@ class CartManager {
       throw new Error('Cantidad supera stock disponible');
     }
 
-    carts[cartIndex].products[productIndex].quantity = quantity;
+    cart.products[productIndex].quantity = quantity;
 
     await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 2));
-    return carts[cartIndex];
+    return cart;
   }
 
   async deleteCart(cartId) {
+    const carts = await this.getCarts();
+    const index = carts.findIndex(c => c.id === cartId);
+
+    if (index === -1) {
+      const error = new Error('Carrito no encontrado');
+      error.status = 404;
+      throw error;
+    }
+
+    const cart = carts[index];
+
+    if (cart.status !== "in_progress") {
+      const error = new Error("No se puede eliminar un carrito que ya fue pagado.");
+      error.status = 400;
+      throw error;
+    }
+
+    carts.splice(index, 1);
+    await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 2));
+  }
+
+  async payCart(cartId) {
     const carts = await this.getCarts();
     const index = carts.findIndex(c => c.id === cartId);
     if (index === -1) {
@@ -175,8 +222,48 @@ class CartManager {
       error.status = 404;
       throw error;
     }
-    carts.splice(index, 1);
+
+    const cart = carts[index];
+
+    if (cart.status !== "in_progress") {
+      throw new Error("El carrito ya fue pagado.");
+    }
+
+    // Validar que tenga al menos un producto
+    if (!cart.products || cart.products.length === 0) {
+      throw new Error("El carrito está vacío.");
+    }
+
+    // Validar stock de todos los productos
+    for (const item of cart.products) {
+      const product = await productManager.getProductById(item.productId);
+      if (!product) {
+        throw new Error(`Producto con ID ${item.productId} no encontrado.`);
+      }
+      if (product.stock < item.quantity) {
+        throw new Error(`Stock insuficiente para el producto ${product.title}.`);
+      }
+    }
+
+    // Descontar stock si todo OK
+    for (const item of cart.products) {
+      const product = await productManager.getProductById(item.productId);
+      product.stock -= item.quantity;
+      await productManager.updateProduct(product.id, product);
+    }
+
+    // Marcar carrito como pagado
+    cart.status = "paid";
+    cart.paidAt = new Date().toISOString();
+
+    // Guardar carrito actualizado
+    carts[index] = cart;
     await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 2));
+  }
+
+  async getPurchaseHistoryByUserId(userId) {
+    const carts = await this.getCarts();
+    return carts.filter(cart => cart.userId === userId && cart.status === "paid");
   }
 }
 

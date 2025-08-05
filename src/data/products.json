@@ -6,7 +6,7 @@
     "code": "AUR123",
     "price": 12999.99,
     "status": true,
-    "stock": 50,
+    "stock": 40,
     "category": "Audio",
     "thumbnails": [
       "https://example.com/img/auriculares.jpg"
@@ -32,7 +32,7 @@
     "code": "SAM22",
     "price": 329999,
     "status": true,
-    "stock": 15,
+    "stock": 13,
     "category": "Electrónica",
     "thumbnails": [
       "https://example.com/img/galaxy-s22.jpg"

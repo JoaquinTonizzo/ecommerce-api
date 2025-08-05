@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "id": "1",
+    "userId": "1",
+    "products": [
+      {
+        "productId": "1",
+        "quantity": 10
+      }
+    ],
+    "status": "paid",
+    "paidAt": "2025-08-05T14:23:41.428Z"
+  },
+  {
+    "id": "2",
+    "userId": "1",
+    "products": [
+      {
+        "productId": "3",
+        "quantity": 2
+      }
+    ],
+    "status": "paid",
+    "paidAt": "2025-08-05T14:28:35.457Z"
+  },
+  {
+    "id": "3",
+    "userId": "1",
+    "products": [],
+    "status": "in_progress"
+  }
+]
