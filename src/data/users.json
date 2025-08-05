@@ -7,5 +7,23 @@
     "lastName": "Test",
     "role": "user",
     "createdAt": "2025-08-05T21:12:43.550Z"
+  },
+  {
+    "id": "1",
+    "email": "admin@gmail.com",
+    "password": "$2b$10$hjJQrqRq5KmorUdhghP1Y.evBgCInfox5cWIN3CbV/5LDdxFghUl.",
+    "firstName": "Admin",
+    "lastName": "Test",
+    "role": "admin",
+    "createdAt": "2025-08-05T21:12:43.550Z"
+  },
+  {
+    "id": "2",
+    "email": "user2@gmail.com",
+    "password": "$2b$10$iu6Hoa0UXrAouKLyg6UMTeNtSIWlwIEnVdrdv845lF9DUExuJF4PS",
+    "firstName": "User2",
+    "lastName": "Test",
+    "role": "user",
+    "createdAt": "2025-08-05T21:50:11.324Z"
   }
 ]

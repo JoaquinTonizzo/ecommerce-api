@@ -4,7 +4,7 @@ export default function Home() {
     return (
         <main className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center items-center px-6 py-16 text-center">
             <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-6 animate-fadeInDown">
-                Bienvenido a MiTienda
+                Bienvenido a TuTienda
             </h1>
             <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-xl mb-10 animate-fadeInUp">
                 La mejor experiencia para comprar tus productos favoritos de forma rápida y segura.
