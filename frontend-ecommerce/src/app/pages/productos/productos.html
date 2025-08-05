@@ -1,1 +1,11 @@
-<p>productos works!</p>
+<div class="productos-container">
+  <h2>Productos</h2>
+  <!-- Ejemplo de producto -->
+  <div class="producto-card">
+    <h3>Producto 1</h3>
+    <p>Descripción breve del producto.</p>
+    <button *ngIf="auth.isLoggedIn()" class="btn-agregar">Agregar al carrito</button>
+    <span *ngIf="!auth.isLoggedIn()" style="color: #f59e42; font-size: 0.95rem;">Inicia sesión para agregar al carrito</span>
+  </div>
+  <!-- Repetir para más productos -->
+</div>

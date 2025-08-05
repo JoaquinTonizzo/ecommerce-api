@@ -2,12 +2,10 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-register',
   standalone: true,
   imports: [RouterLink],
-  templateUrl: './home.html',
-  styleUrl: './home.css'
+  templateUrl: './register.html',
+  styleUrl: './register.css'
 })
-export class Home {
-
-}
+export class Register {}
