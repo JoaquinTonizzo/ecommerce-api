@@ -114,4 +114,23 @@ router.put('/:cid/product/:pid', authenticateToken, async (req, res, next) => {
   }
 });
 
+// DELETE /api/carts/:cid => Eliminar carrito (sólo dueño)
+router.delete('/:cid', authenticateToken, async (req, res, next) => {
+  try {
+    const cart = await manager.getCartById(req.params.cid);
+    if (!cart) return res.status(404).json({ error: 'Carrito no encontrado' });
+
+    // Validar que el carrito pertenezca al usuario autenticado
+    if (cart.userId !== req.user.id) {
+      return res.status(403).json({ error: 'No autorizado para eliminar este carrito' });
+    }
+
+    await manager.deleteCart(req.params.cid);
+
+    res.json({ message: 'Carrito eliminado correctamente' });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;

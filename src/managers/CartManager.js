@@ -166,6 +166,18 @@ class CartManager {
     await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 2));
     return carts[cartIndex];
   }
+
+  async deleteCart(cartId) {
+    const carts = await this.getCarts();
+    const index = carts.findIndex(c => c.id === cartId);
+    if (index === -1) {
+      const error = new Error('Carrito no encontrado');
+      error.status = 404;
+      throw error;
+    }
+    carts.splice(index, 1);
+    await fs.promises.writeFile(this.path, JSON.stringify(carts, null, 2));
+  }
 }
 
 const cartManager = new CartManager('./src/data/carts.json');
