@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import ProductModal from './../components/ProductModal';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Products() {
     const [productos, setProductos] = useState([]);
@@ -69,7 +71,7 @@ export default function Products() {
     async function handleAddToCart(producto) {
         const token = localStorage.getItem('token');
         if (!token) {
-            alert('Debes iniciar sesión para agregar productos al carrito');
+            toast.error('Debes iniciar sesión para agregar productos al carrito');
             return;
         }
 
@@ -101,14 +103,15 @@ export default function Products() {
             const addData = await addRes.json();
             if (!addRes.ok) throw new Error(addData.error || 'Error al agregar producto al carrito');
 
-            alert('Producto agregado al carrito');
+            toast.success('Producto agregado al carrito');
         } catch (err) {
-            alert(err.message);
+            toast.error(err.message);
         }
     }
 
     return (
         <main className="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-12">
+            <ToastContainer position="top-right" autoClose={2500} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover theme="colored" />
             <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-10 text-center animate-fadeInDown">
                 Nuestros Productos
             </h1>
