@@ -1,10 +1,10 @@
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 function Navbar() {
+    const { user, setUser } = useContext(UserContext);
     const [isOpen, setIsOpen] = useState(false);
-    const [user, setUser] = useState(null);
     const [profileOpen, setProfileOpen] = useState(false);
 
     useEffect(() => {
@@ -78,16 +78,7 @@ function Navbar() {
                                 className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
                                 onClick={() => setIsOpen(false)}
                             >
-                                Productos
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                to="/cart"
-                                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                                onClick={() => setIsOpen(false)}
-                            >
-                                Cart
+                                Products
                             </Link>
                         </li>
                         {!user && (
@@ -113,29 +104,40 @@ function Navbar() {
                             </>
                         )}
                         {user && (
-                            <li className="relative">
-                                <button
-                                    className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent font-semibold"
-                                    onClick={() => setProfileOpen((open) => !open)}
-                                >
-                                    Perfil
-                                </button>
-                                {profileOpen && (
-                                    <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4 z-50">
-                                        <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">Email: {user.email}</div>
-                                        <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">Rol: {user.role}</div>
-                                        <button
-                                            onClick={() => {
-                                                localStorage.removeItem('token');
-                                                window.location.reload();
-                                            }}
-                                            className="mt-3 w-full px-4 py-2 rounded bg-red-600 text-white font-semibold hover:bg-red-700 transition"
-                                        >
-                                            Cerrar sesión
-                                        </button>
-                                    </div>
-                                )}
-                            </li>
+                            <>
+                                <li>
+                                    <Link
+                                        to="/cart"
+                                        className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                                        onClick={() => setIsOpen(false)}
+                                    >
+                                        Cart
+                                    </Link>
+                                </li>
+                                <li className="relative">
+                                    <button
+                                        className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent font-semibold"
+                                        onClick={() => setProfileOpen((open) => !open)}
+                                    >
+                                        Perfil
+                                    </button>
+                                    {profileOpen && (
+                                        <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4 z-50">
+                                            <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">Email: {user.email}</div>
+                                            <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">Rol: {user.role}</div>
+                                            <button
+                                                onClick={() => {
+                                                    localStorage.removeItem('token');
+                                                    window.location.reload();
+                                                }}
+                                                className="mt-3 w-full px-4 py-2 rounded bg-red-600 text-white font-semibold hover:bg-red-700 transition"
+                                            >
+                                                Cerrar sesión
+                                            </button>
+                                        </div>
+                                    )}
+                                </li>
+                            </>
                         )}
                     </ul>
                 </div>

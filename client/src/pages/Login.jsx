@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from '../context/UserContext';
 
 export default function Login() {
     const [form, setForm] = useState({ email: '', password: '' });
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { setUser } = useContext(UserContext);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -35,6 +38,9 @@ export default function Login() {
 
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data.user));
+
+            const payload = JSON.parse(atob(data.token.split('.')[1]));
+            setUser(payload);
 
             setIsLoggedIn(true);
             navigate('/products'); // o donde quieras redirigir

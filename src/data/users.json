@@ -25,5 +25,14 @@
     "lastName": "Test",
     "role": "user",
     "createdAt": "2025-08-05T21:50:11.324Z"
+  },
+  {
+    "id": "3",
+    "email": "usuario3@gmail.com",
+    "password": "$2b$10$LFbspACUBevnSD2FIO160.1Dw3A3E98fYj.D7BABLRn5rDPOrflw6",
+    "firstName": "Usuario",
+    "lastName": "Prueba",
+    "role": "user",
+    "createdAt": "2025-08-06T19:31:11.501Z"
   }
 ]
