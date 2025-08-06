@@ -50,5 +50,50 @@
     "firstName": "1",
     "lastName": "1",
     "role": "admin"
+  },
+  {
+    "id": "NaN",
+    "email": "admin43@gmail.com",
+    "password": "$2b$10$/S2dJSnYzzeDDs9HgTgajOKvlKasI0yUfRhADFIwr8mARrKRAzhL.",
+    "firstName": "q",
+    "lastName": "q",
+    "role": "user",
+    "createdAt": "2025-08-06T21:03:06.697Z"
+  },
+  {
+    "id": "NaN",
+    "email": "admin5@gmail.com",
+    "password": "$2b$10$nn8ufrlIIsR5buKdjY6YceAV.rvZ0x/OvArrHjpEob9SDiXrqncqG",
+    "firstName": "1",
+    "lastName": "1",
+    "role": "user",
+    "createdAt": "2025-08-06T21:03:52.275Z"
+  },
+  {
+    "id": "NaN",
+    "email": "prueba@1.1",
+    "password": "$2b$10$O6ojMMTeDzpLuMz4.h6Q2eqQmUgwrPDF7WyRyuXNdSyFXeeCyqkfS",
+    "firstName": "1",
+    "lastName": "1",
+    "role": "user",
+    "createdAt": "2025-08-06T21:06:24.776Z"
+  },
+  {
+    "id": "NaN",
+    "email": "1@1.e",
+    "password": "$2b$10$VKcQ2EQUDgeN5sLGi8L9AeZ4/MWAsqPPsu.CuUX0alNYbVVtkm7TW",
+    "firstName": "1",
+    "lastName": "1",
+    "role": "user",
+    "createdAt": "2025-08-06T21:08:30.258Z"
+  },
+  {
+    "id": "NaN",
+    "email": "1@1.r",
+    "password": "$2b$10$SKCB./RToUGVwtovaOFyZeUEwFIbB10cilc92f0o0tWmAkToqKdVq",
+    "firstName": "1",
+    "lastName": "1",
+    "role": "user",
+    "createdAt": "2025-08-06T21:08:52.786Z"
   }
 ]
