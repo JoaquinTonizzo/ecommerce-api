@@ -34,5 +34,21 @@
     "lastName": "Prueba",
     "role": "user",
     "createdAt": "2025-08-06T19:31:11.501Z"
+  },
+  {
+    "id": "b0c725f2-2a2d-4154-b003-9bdd99ef1a1c",
+    "email": "admin1@gmail.com",
+    "password": "$2b$10$6m5yWJom6zzXmZvMdDikMOdqJU2WsO08.UgsWnYM5G8zkaOHidQGW",
+    "firstName": "1",
+    "lastName": "1",
+    "role": "admin"
+  },
+  {
+    "id": "1a054791-e291-43b2-ab36-469c76f11145",
+    "email": "admin13@gmail.com",
+    "password": "$2b$10$3/vJGvbm24JkViTG5N.kNOcwxiigayUAa4OA4PcFzt5LT3ZV5sVaO",
+    "firstName": "1",
+    "lastName": "1",
+    "role": "admin"
   }
 ]

@@ -137,11 +137,18 @@
     "userId": "1",
     "products": [
       {
-        "productId": "1",
+        "productId": "2",
         "quantity": 1
       }
     ],
     "status": "in_progress",
     "createdAt": "2025-08-06T20:25:10.942Z"
+  },
+  {
+    "id": "10",
+    "userId": "b0c725f2-2a2d-4154-b003-9bdd99ef1a1c",
+    "products": [],
+    "status": "in_progress",
+    "createdAt": "2025-08-06T20:53:32.601Z"
   }
 ]
