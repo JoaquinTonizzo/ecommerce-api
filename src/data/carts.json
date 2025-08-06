@@ -46,6 +46,10 @@
       {
         "productId": "10",
         "quantity": 12
+      },
+      {
+        "productId": "2",
+        "quantity": 1
       }
     ],
     "status": "in_progress",
