@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Cart() {
     const [cartId, setCartId] = useState(null);
@@ -84,6 +86,55 @@ export default function Cart() {
 
     const total = products.reduce((acc, p) => acc + (p.price || 0) * p.quantity, 0);
 
+    async function handleAddToCart(product) {
+        if (!token || !cartId) return;
+        try {
+            const res = await fetch(`http://localhost:8080/api/carts/${cartId}/product/${product.id}`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Error al agregar producto');
+            setProducts(prev => prev.map(p => p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p));
+            toast.success('Producto agregado al carrito');
+        } catch (err) {
+            toast.error(err.message);
+        }
+    }
+
+    async function handleRemoveFromCart(product) {
+        if (!token || !cartId || product.quantity === 0) return;
+        try {
+            if (product.quantity > 1) {
+                // PUT para actualizar cantidad
+                const res = await fetch(`http://localhost:8080/api/carts/${cartId}/product/${product.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ quantity: product.quantity - 1 })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Error al descontar producto');
+                setProducts(prev => prev.map(p => p.id === product.id ? { ...p, quantity: p.quantity - 1 } : p));
+                toast.success('Cantidad actualizada');
+            } else {
+                // DELETE para eliminar producto
+                const res = await fetch(`http://localhost:8080/api/carts/${cartId}/product/${product.id}`, {
+                    method: 'DELETE',
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Error al quitar producto');
+                setProducts(prev => prev.filter(p => p.id !== product.id));
+                toast.success('Producto quitado del carrito');
+            }
+        } catch (err) {
+            toast.error(err.message);
+        }
+    }
+
     async function cargarHistorial() {
         try {
             setError(null);
@@ -127,8 +178,10 @@ export default function Cart() {
         );
     }
 
+
     return (
         <main className="min-h-screen w-full bg-gray-50 dark:bg-gray-900 px-6 py-12">
+            <ToastContainer position="top-right" autoClose={2500} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover theme="colored" />
             <h1 className="animate-fadeInDown text-3xl font-bold mb-8 text-gray-900 dark:text-white">Tu Carrito</h1>
 
             {products.length ? (
@@ -145,7 +198,33 @@ export default function Cart() {
                                         Precio: ${typeof p.price === 'number' ? p.price.toFixed(2) : 'N/A'}
                                     </p>
                                 </div>
-                                <span className="px-2 text-sm">{p.quantity}u</span>
+                                <div className="flex items-center gap-2">
+                                    {p.quantity > 1 ? (
+                                        <button
+                                            onClick={() => handleRemoveFromCart(p)}
+                                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                                            title="Quitar uno"
+                                        >
+                                            –
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={() => handleRemoveFromCart(p)}
+                                            className="bg-gray-300 hover:bg-red-600 text-gray-700 hover:text-white px-3 py-1 rounded"
+                                            title="Eliminar producto"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                                        </button>
+                                    )}
+                                    <span className="px-2 text-sm font-semibold text-gray-900 dark:text-white min-w-[2ch] text-center">{p.quantity}u</span>
+                                    <button
+                                        onClick={() => handleAddToCart(p)}
+                                        className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
+                                        title="Agregar uno"
+                                    >
+                                        +
+                                    </button>
+                                </div>
                                 <span className="px-2 font-semibold text-gray-900 dark:text-white">
                                     ${(p.price * p.quantity).toFixed(2)}
                                 </span>
@@ -164,11 +243,11 @@ export default function Cart() {
                                     });
                                     const data = await res.json();
                                     if (!res.ok) throw new Error(data.error || 'Error al pagar carrito');
-                                    alert('Compra realizada con éxito');
+                                    toast.success('Compra realizada con éxito');
                                     setProducts([]);
                                     setCartId(null);
                                 } catch (err) {
-                                    alert(err.message);
+                                    toast.error(err.message);
                                 }
                             }}
                             className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded font-semibold"

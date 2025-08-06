@@ -6,7 +6,7 @@
     "code": "AUR123",
     "price": 12999.99,
     "status": true,
-    "stock": 38,
+    "stock": 28,
     "category": "Audio",
     "thumbnails": []
   },
@@ -17,7 +17,7 @@
     "code": "AURC123",
     "price": 5999.99,
     "status": true,
-    "stock": 18,
+    "stock": "12",
     "category": "Audio",
     "thumbnails": []
   },
@@ -28,7 +28,7 @@
     "code": "SAM22",
     "price": 329999,
     "status": true,
-    "stock": 13,
+    "stock": 0,
     "category": "Electrónica",
     "thumbnails": []
   },
@@ -39,7 +39,7 @@
     "code": "LAPG123",
     "price": 159999,
     "status": true,
-    "stock": 7,
+    "stock": 0,
     "category": "Computación",
     "thumbnails": []
   },
@@ -50,7 +50,7 @@
     "code": "MON27UHD",
     "price": 49999.99,
     "status": true,
-    "stock": 25,
+    "stock": 23,
     "category": "Computación",
     "thumbnails": []
   },
@@ -61,7 +61,7 @@
     "code": "TECMECRGB",
     "price": 8999.99,
     "status": true,
-    "stock": 30,
+    "stock": 26,
     "category": "Accesorios",
     "thumbnails": []
   },
@@ -83,7 +83,7 @@
     "code": "SMRTWCH",
     "price": 19999.99,
     "status": true,
-    "stock": 18,
+    "stock": 15,
     "category": "Wearables",
     "thumbnails": []
   },
@@ -94,19 +94,19 @@
     "code": "CAMIPSEC",
     "price": 7499.99,
     "status": true,
-    "stock": 12,
+    "stock": 0,
     "category": "Seguridad",
     "thumbnails": []
   },
   {
     "id": "10",
-    "title": "Tablet 10 pulgadas",
-    "description": "Tablet con pantalla HD, batería de larga duración y cámara frontal",
-    "code": "TAB10HD",
-    "price": 29999.99,
+    "title": "XXX",
+    "description": "XXX",
+    "code": "XX",
+    "price": "12",
     "status": true,
-    "stock": 22,
-    "category": "Electrónica",
+    "stock": "32",
+    "category": "9477214",
     "thumbnails": []
   }
 ]

@@ -134,7 +134,7 @@ class CartManager {
     }
 
     const productIndex = cart.products.findIndex(
-      (p) => p.product === productId
+      (p) => p.productId === productId
     );
 
     if (productIndex === -1) {
@@ -173,7 +173,7 @@ class CartManager {
       throw error;
     }
 
-    const productIndex = cart.products.findIndex(p => p.product === productId);
+    const productIndex = cart.products.findIndex(p => p.productId === productId);
     if (productIndex === -1) return null;
 
     // Validar stock con productManager

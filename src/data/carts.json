@@ -45,23 +45,36 @@
     "products": [
       {
         "productId": "10",
-        "quantity": 12
+        "quantity": 13
       },
       {
         "productId": "2",
-        "quantity": 5
+        "quantity": 18
       },
       {
         "productId": "1",
-        "quantity": 1
+        "quantity": 6
       },
       {
         "productId": "3",
+        "quantity": 7
+      },
+      {
+        "productId": "5",
+        "quantity": 2
+      },
+      {
+        "productId": "8",
+        "quantity": 2
+      },
+      {
+        "productId": "6",
         "quantity": 1
       }
     ],
-    "status": "in_progress",
-    "createdAt": "2025-08-05T21:25:53.825Z"
+    "status": "paid",
+    "createdAt": "2025-08-05T21:25:53.825Z",
+    "paidAt": "2025-08-06T20:19:55.176Z"
   },
   {
     "id": "5",
@@ -76,5 +89,59 @@
     "products": [],
     "status": "in_progress",
     "createdAt": "2025-08-05T21:50:22.999Z"
+  },
+  {
+    "id": "7",
+    "userId": "1",
+    "products": [
+      {
+        "productId": "8",
+        "quantity": 1
+      },
+      {
+        "productId": "1",
+        "quantity": 4
+      },
+      {
+        "productId": "4",
+        "quantity": 7
+      },
+      {
+        "productId": "3",
+        "quantity": 6
+      }
+    ],
+    "status": "paid",
+    "createdAt": "2025-08-06T20:20:02.110Z",
+    "paidAt": "2025-08-06T20:22:25.875Z"
+  },
+  {
+    "id": "8",
+    "userId": "1",
+    "products": [
+      {
+        "productId": "9",
+        "quantity": 12
+      },
+      {
+        "productId": "6",
+        "quantity": 3
+      }
+    ],
+    "status": "paid",
+    "createdAt": "2025-08-06T20:22:27.659Z",
+    "paidAt": "2025-08-06T20:25:08.154Z"
+  },
+  {
+    "id": "9",
+    "userId": "1",
+    "products": [
+      {
+        "productId": "1",
+        "quantity": 1
+      }
+    ],
+    "status": "in_progress",
+    "createdAt": "2025-08-06T20:25:10.942Z"
   }
 ]
