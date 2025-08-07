@@ -310,7 +310,7 @@ export default function Products() {
                             <select
                                 value={ordenPrecio}
                                 onChange={e => setOrdenPrecio(e.target.value)}
-                                className="w-full max-w-xs px-4 py-2 rounded-lg border border-blue-100 dark:border-blue-800 focus:outline-none focus:ring-1 focus:ring-blue-200 dark:bg-gray-950 dark:text-white transition text-xs"
+                                className="w-full px-4 py-2 rounded-lg border border-blue-100 dark:border-blue-800 focus:outline-none focus:ring-1 focus:ring-blue-200 dark:bg-gray-950 dark:text-white transition text-xs"
                             >
                                 <option value="">Sin orden</option>
                                 <option value="asc">Precio menor a mayor</option>
@@ -336,22 +336,22 @@ export default function Products() {
                                 {sinStock && (
                                     <span className="absolute top-2 left-2 bg-red-500 text-white px-2 py-0.5 rounded font-bold text-[10px] shadow-sm">SIN STOCK</span>
                                 )}
-                                <div className="flex flex-row sm:flex-col gap-3 items-center h-full">
+                                <div className="flex flex-col sm:flex-col gap-3 items-center h-full w-full">
                                     <img
-                                        src={producto.thumbnails?.[0] || 'https://placehold.co/300x300'}
+                                        src={producto.thumbnails?.[0] || 'https://placehold.co/250x250'}
                                         alt={producto.title}
-                                        className="w-24 h-24 sm:w-full sm:h-[300px] object-cover rounded-md shadow-md group-hover:scale-105 transition-all duration-200 flex-shrink-0"
+                                        className="w-[180px] h-[180px] sm:w-[250px] sm:h-[250px] object-cover rounded-md shadow-md group-hover:scale-105 transition-all duration-200 flex-shrink-0 mx-auto"
                                     />
-                                    <div className="flex flex-col justify-between flex-1 h-full w-full">
-                                        <h2 className="text-base font-bold mb-0.5 text-blue-700 dark:text-blue-300 truncate drop-shadow transition-all duration-200">
+                                    <div className="flex flex-col justify-between flex-1 h-full w-full items-center sm:items-start">
+                                        <h2 className="text-base font-bold mb-0.5 text-blue-700 dark:text-blue-300 truncate drop-shadow transition-all duration-200 text-center sm:text-left w-full">
                                             {producto.title}
                                         </h2>
-                                        <div className="text-sm font-bold text-blue-600 dark:text-blue-400 mb-1">
+                                        <div className="text-sm font-bold text-blue-600 dark:text-blue-400 mb-1 text-center sm:text-left w-full">
                                             ${producto.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </div>
-                                        <div className="flex items-center gap-2 mt-2 justify-start">
+                                        <div className="flex items-center gap-2 mt-2 justify-center sm:justify-start w-full">
                                             {!sinStock && (
-                                                <>
+                                                <div className="flex w-full gap-2">
                                                     <button
                                                         onClick={e => {
                                                             e.stopPropagation();
@@ -365,12 +365,12 @@ export default function Products() {
                                                             }
                                                             handleRemoveFromCart(producto);
                                                         }}
-                                                        className="rounded-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white w-10 h-7 flex items-center justify-center shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-400"
+                                                        className="rounded-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white h-10 sm:h-8 flex items-center justify-center shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-400 flex-1 min-w-0 text-base"
                                                         title={isAdmin ? "Los administradores no pueden generar pedidos" : cantidad < 1 ? "No puedes quitar productos si la cantidad es 0" : "Quitar uno"}
                                                     >
-                                                        <FaMinus className="text-xs" />
+                                                        <FaMinus />
                                                     </button>
-                                                    <span className="font-bold text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900 border border-blue-300 dark:border-blue-700 rounded-full px-3 py-1 text-xs shadow-sm">
+                                                    <span className="font-bold text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900 border border-blue-300 dark:border-blue-700 rounded-full px-3 py-2 sm:py-1 text-base sm:text-xs shadow-sm text-center min-w-[40px]">
                                                         {cantidad}
                                                     </span>
                                                     <button
@@ -382,12 +382,12 @@ export default function Products() {
                                                             }
                                                             handleAddToCart(producto);
                                                         }}
-                                                        className="rounded-full bg-gradient-to-r from-blue-600 to-purple-500 hover:from-blue-700 hover:to-purple-600 text-white w-10 h-7 flex items-center justify-center shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                        className="rounded-full bg-gradient-to-r from-blue-600 to-purple-500 hover:from-blue-700 hover:to-purple-600 text-white h-10 sm:h-8 flex items-center justify-center shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 flex-1 min-w-0 text-base"
                                                         title={isAdmin ? "Los administradores no pueden generar pedidos" : "Agregar uno"}
                                                     >
-                                                        <FaPlus className="text-xs" />
+                                                        <FaPlus />
                                                     </button>
-                                                </>
+                                                </div>
                                             )}
                                         </div>
                                     </div>
