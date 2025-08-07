@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { FaUserCircle, FaChevronDown, FaSignOutAlt, FaUserShield, FaUser } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 
@@ -127,39 +128,51 @@ function Navbar() {
                                 )}
                                 <li className="relative">
                                     <button
-                                        className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent font-semibold"
+                                        className="flex items-center gap-2 py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent font-semibold"
                                         onClick={() => setProfileOpen((open) => !open)}
                                     >
-                                        Perfil
+                                        <span className="hidden sm:inline">Perfil</span>
+                                        <FaChevronDown className={`ml-1 transition-transform duration-200 ${profileOpen ? 'rotate-180' : ''}`} />
                                     </button>
                                     {profileOpen && (
-                                        <>
+                                        <div>
                                             <div
                                                 className="fixed inset-0 z-40"
                                                 onClick={() => setProfileOpen(false)}
                                             />
                                             <div
-                                                className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4 z-50"
+                                                className="absolute right-0 mt-2 w-72 bg-white/80 dark:bg-gray-900/80 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 p-6 z-50 flex flex-col items-center animate-fadeInDown backdrop-blur-md"
                                                 onClick={e => e.stopPropagation()}
                                             >
-                                                <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">Email: {user.email}</div>
-                                                <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">Rol: {user.role}</div>
+                                                <div className="mb-2 flex flex-col items-center">
+                                                    <FaUserCircle className="text-6xl text-blue-400 dark:text-blue-200 mb-2" />
+                                                    <div className="flex items-center gap-2 text-sm text-blue-500 dark:text-blue-300 mb-2">
+                                                        {user.role === 'admin' ? <FaUserShield className="text-base" /> : <FaUser className="text-base" />}
+                                                        <span className="font-semibold">{user.role === 'admin' ? 'Administrador' : 'Usuario'}</span>
+                                                    </div>
+                                                </div>
+                                                {user.name && (
+                                                    <div className="text-base font-bold text-gray-800 dark:text-gray-100 mb-1 text-center">{user.name}</div>
+                                                )}
+                                                <div className="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-1 text-center">{user.email}</div>
                                                 <button
                                                     onClick={() => {
                                                         localStorage.removeItem('token');
                                                         window.location.reload();
                                                     }}
-                                                    className="mt-3 w-full px-4 py-2 rounded bg-red-600 text-white font-semibold hover:bg-red-700 transition"
+                                                    className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 font-semibold hover:bg-red-200 dark:hover:bg-red-800 transition shadow-sm group"
                                                 >
-                                                    Cerrar sesión
+                                                    <FaSignOutAlt className="text-lg group-hover:scale-105 transition-transform duration-200" />
+                                                    <span className="group-hover:underline">Cerrar sesión</span>
                                                 </button>
                                             </div>
-                                        </>
+                                        </div>
                                     )}
                                 </li>
                             </>
                         )}
                     </ul>
+
                 </div>
             </div>
         </nav>
