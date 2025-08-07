@@ -29,7 +29,7 @@ export default function AdminPanel() {
         try {
             const token = localStorage.getItem('token');
             // Si tienes un endpoint global, cámbialo aquí. Si no, usa el de usuario actual.
-            const res = await fetch('http://localhost:8080/api/carts/history', {
+            const res = await fetch('http://localhost:8080/api/carts/paid', {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const data = await res.json();

@@ -1,6 +1,6 @@
 import express from 'express';
 import cartManager from '../managers/CartManager.js';
-import { authenticateToken } from '../middlewares/auth.js';
+import { authenticateToken, isAdmin } from '../middlewares/auth.js';
 
 const router = express.Router();
 const manager = cartManager;
@@ -25,6 +25,17 @@ router.get('/history', authenticateToken, async (req, res, next) => {
     const userId = req.user.id;
     const history = await manager.getPurchaseHistoryByUserId(userId);
     res.json(history);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GET /api/carts/paid => Obtener todos los carritos pagados (solo admin)
+router.get('/paid', authenticateToken, isAdmin, async (req, res, next) => {
+  try {
+    const allCarts = await manager.getCarts();
+    const paidCarts = allCarts.filter(cart => cart.status === 'paid');
+    res.json(paidCarts);
   } catch (error) {
     next(error);
   }

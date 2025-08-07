@@ -1,8 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import { UserContext } from '../context/UserContext.jsx';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Cart() {
+    const navigate = useNavigate();
+    const { user } = useContext(UserContext);
     const [cartId, setCartId] = useState(null);
     const [products, setProducts] = useState([]);
     const [historialCarritos, setHistorialCarritos] = useState([]);
@@ -13,6 +17,12 @@ export default function Cart() {
     const token = localStorage.getItem('token');
 
     useEffect(() => {
+        // Redirigir si no hay usuario o si es admin
+        if (!user || user.role === 'admin') {
+            navigate('/');
+            return;
+        }
+
         if (!token) {
             setError('Debes iniciar sesión para ver el carrito');
             setLoading(false);
@@ -82,7 +92,7 @@ export default function Cart() {
         }
 
         initCart();
-    }, [token]);
+    }, [token, user, navigate]);
 
     const total = products.reduce((acc, p) => acc + (p.price || 0) * p.quantity, 0);
 

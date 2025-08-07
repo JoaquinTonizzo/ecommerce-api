@@ -97,16 +97,5 @@
     "stock": 0,
     "category": "Seguridad",
     "thumbnails": []
-  },
-  {
-    "id": "10",
-    "title": "XXX",
-    "description": "XXX",
-    "code": "XX",
-    "price": "12",
-    "status": true,
-    "stock": "32",
-    "category": "9477214",
-    "thumbnails": []
   }
 ]
