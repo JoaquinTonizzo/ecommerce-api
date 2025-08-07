@@ -8,7 +8,7 @@ const manager = cartManager;
 // POST /api/carts/ => Crear nuevo carrito
 router.post('/', authenticateToken, async (req, res, next) => {
   try {
-    const userId = req.user.id; // viene del token JWT
+    const userId = req.user._id || req.user.id; // MongoDB _id o fallback
     const existing = await manager.getCartByUserId(userId);
     if (existing) return res.status(409).json({ error: 'El usuario ya tiene un carrito' });
 
@@ -22,7 +22,7 @@ router.post('/', authenticateToken, async (req, res, next) => {
 // GET /api/carts/history => Obtener historial de pedidos pagados del usuario
 router.get('/history', authenticateToken, async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user._id || req.user.id;
     const history = await manager.getPurchaseHistoryByUserId(userId);
     res.json(history);
   } catch (error) {
@@ -48,7 +48,9 @@ router.get('/:cid', authenticateToken, async (req, res, next) => {
     if (!cart) return res.status(404).json({ error: 'Carrito no encontrado' });
 
     // Solo el dueño o admin
-    if (req.user.id !== cart.userId && req.user.role !== 'admin') {
+    const userId = (req.user._id || req.user.id);
+    // Si cart.userId es un ObjectId, conviértelo a string para comparar
+    if (userId.toString() !== cart.userId.toString() && req.user.role !== 'admin') {
       return res.status(403).json({ error: 'No tienes permiso para ver este carrito' });
     }
 
@@ -65,7 +67,8 @@ router.post('/:cid/product/:pid', authenticateToken, async (req, res, next) => {
     if (!cart) return res.status(404).json({ error: 'Carrito no encontrado' });
 
     // Validar que el carrito pertenezca al usuario autenticado
-    if (cart.userId !== req.user.id) {
+    const userId = (req.user._id || req.user.id);
+    if (userId.toString() !== cart.userId.toString()) {
       return res.status(403).json({ error: 'No autorizado para modificar este carrito' });
     }
 
@@ -89,7 +92,8 @@ router.delete('/:cid/product/:pid', authenticateToken, async (req, res, next) =>
     const cart = await manager.getCartById(req.params.cid);
     if (!cart) return res.status(404).json({ error: 'Carrito no encontrado' });
 
-    if (cart.userId !== req.user.id) {
+    const userId = (req.user._id || req.user.id);
+    if (userId.toString() !== cart.userId.toString()) {
       return res.status(403).json({ error: 'No autorizado para modificar este carrito' });
     }
 
@@ -109,7 +113,8 @@ router.put('/:cid/product/:pid', authenticateToken, async (req, res, next) => {
     const cart = await manager.getCartById(req.params.cid);
     if (!cart) return res.status(404).json({ error: 'Carrito no encontrado' });
 
-    if (cart.userId !== req.user.id) {
+    const userId = (req.user._id || req.user.id);
+    if (userId.toString() !== cart.userId.toString()) {
       return res.status(403).json({ error: 'No autorizado para modificar este carrito' });
     }
 
@@ -143,7 +148,8 @@ router.delete('/:cid', authenticateToken, async (req, res, next) => {
     if (!cart) return res.status(404).json({ error: 'Carrito no encontrado' });
 
     // Validar que el carrito pertenezca al usuario autenticado
-    if (cart.userId !== req.user.id) {
+    const userId = (req.user._id || req.user.id);
+    if (userId.toString() !== cart.userId.toString()) {
       return res.status(403).json({ error: 'No autorizado para eliminar este carrito' });
     }
 
@@ -161,7 +167,8 @@ router.post('/:cid/pay', authenticateToken, async (req, res, next) => {
     const cart = await manager.getCartById(req.params.cid);
 
     // Validar que el carrito pertenezca al usuario autenticado o sea admin
-    if (cart.userId !== req.user.id && req.user.role !== 'admin') {
+    const userId = (req.user._id || req.user.id);
+    if (userId.toString() !== cart.userId.toString() && req.user.role !== 'admin') {
       return res.status(403).json({ error: 'No autorizado para pagar este carrito' });
     }
 

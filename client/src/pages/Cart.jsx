@@ -34,8 +34,15 @@ export default function Cart() {
             // Obtener detalles de cada producto con su productId
             const detalles = await Promise.all(
                 productsInCart.map(async ({ productId, quantity }) => {
-                    const res = await fetch(`${API_URL}/api/products/${productId}`);
-                    if (!res.ok) throw new Error('Error al cargar producto ' + productId);
+                    // Si productId es un objeto, extrae el _id
+                    let prodId;
+                    if (typeof productId === 'object' && productId !== null) {
+                        prodId = productId._id || productId.id || productId.toString();
+                    } else {
+                        prodId = productId;
+                    }
+                    const res = await fetch(`${API_URL}/api/products/${prodId}`);
+                    if (!res.ok) throw new Error('Error al cargar producto ' + prodId);
                     const product = await res.json();
                     return { ...product, quantity };
                 })
@@ -60,7 +67,7 @@ export default function Cart() {
                 let carritoId;
 
                 if (carritoEnProgreso) {
-                    carritoId = carritoEnProgreso.id;
+                    carritoId = carritoEnProgreso._id;
                 } else {
                     // Crear nuevo carrito
                     const createRes = await fetch(`${API_URL}/api/carts/`, {
@@ -69,7 +76,7 @@ export default function Cart() {
                     });
                     const nuevoCarrito = await createRes.json();
                     if (!createRes.ok) throw new Error(nuevoCarrito.error || 'Error al crear carrito');
-                    carritoId = nuevoCarrito.id;
+                    carritoId = nuevoCarrito._id;
                 }
 
                 setCartId(carritoId);
@@ -79,6 +86,7 @@ export default function Cart() {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const productosInCart = await productosRes.json();
+                console.log('Productos en carrito:', productosInCart);
                 if (!productosRes.ok) throw new Error(productosInCart.error || 'Error al cargar carrito');
 
                 // Obtener detalles completos de productos y añadir cantidades
@@ -100,13 +108,13 @@ export default function Cart() {
     async function handleAddToCart(product) {
         if (!token || !cartId) return;
         try {
-            const res = await fetch(`${API_URL}/api/carts/${cartId}/product/${product.id}`, {
+            const res = await fetch(`${API_URL}/api/carts/${cartId}/product/${product._id}`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}` },
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Error al agregar producto');
-            setProducts(prev => prev.map(p => p.id === product.id ? { ...p, quantity: p.quantity + 1 } : p));
+            setProducts(prev => prev.map(p => p._id === product._id ? { ...p, quantity: p.quantity + 1 } : p));
             toast.success('Producto agregado al carrito');
         } catch (err) {
             toast.error(err.message);
@@ -118,7 +126,7 @@ export default function Cart() {
         try {
             if (product.quantity > 1) {
                 // PUT para actualizar cantidad
-                const res = await fetch(`${API_URL}/api/carts/${cartId}/product/${product.id}`, {
+                const res = await fetch(`${API_URL}/api/carts/${cartId}/product/${product._id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -128,17 +136,17 @@ export default function Cart() {
                 });
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.error || 'Error al descontar producto');
-                setProducts(prev => prev.map(p => p.id === product.id ? { ...p, quantity: p.quantity - 1 } : p));
+                setProducts(prev => prev.map(p => p._id === product._id ? { ...p, quantity: p.quantity - 1 } : p));
                 toast.success('Cantidad actualizada');
             } else {
                 // DELETE para eliminar producto
-                const res = await fetch(`${API_URL}/api/carts/${cartId}/product/${product.id}`, {
+                const res = await fetch(`${API_URL}/api/carts/${cartId}/product/${product._id}`, {
                     method: 'DELETE',
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.error || 'Error al quitar producto');
-                setProducts(prev => prev.filter(p => p.id !== product.id));
+                setProducts(prev => prev.filter(p => p._id !== product._id));
                 toast.success('Producto quitado del carrito');
             }
         } catch (err) {
@@ -151,13 +159,13 @@ export default function Cart() {
         if (!token || !cartId || product.quantity === 0) return;
         try {
             // DELETE para eliminar producto
-            const res = await fetch(`${API_URL}/api/carts/${cartId}/product/${product.id}`, {
+            const res = await fetch(`${API_URL}/api/carts/${cartId}/product/${product._id}`, {
                 method: 'DELETE',
                 headers: { Authorization: `Bearer ${token}` },
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Error al quitar producto');
-            setProducts(prev => prev.filter(p => p.id !== product.id));
+            setProducts(prev => prev.filter(p => p._id !== product._id));
             toast.success('Producto quitado del carrito');
         } catch (err) {
             toast.error(err.message);
@@ -218,7 +226,7 @@ export default function Cart() {
                     <ul className="space-y-6 max-w-3xl mx-auto">
                         {products.map((p) => (
                             <li
-                                key={p.id}
+                                key={p._id}
                                 className="animate-fadeInDown bg-white dark:bg-gray-800 p-4 rounded shadow flex items-center justify-between"
                             >
                                 <div>
