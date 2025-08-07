@@ -225,29 +225,32 @@ export default function Products() {
                                 ${producto.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </div>
                             <div className="flex items-center gap-2 mt-auto">
-                                <button
-                                    onClick={e => {
-                                        e.stopPropagation();
-                                        handleRemoveFromCart(producto);
-                                    }}
-                                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded disabled:opacity-50"
-                                    disabled={cantidad < 1 || inactivo || sinStock}
-                                    title="Quitar uno"
-                                >
-                                    –
-                                </button>
-                                <span className="font-semibold text-gray-900 dark:text-white min-w-[2ch] text-center">{cantidad}</span>
-                                <button
-                                    onClick={e => {
-                                        e.stopPropagation();
-                                        handleAddToCart(producto);
-                                    }}
-                                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
-                                    title="Agregar uno"
-                                    disabled={inactivo || sinStock}
-                                >
-                                    +
-                                </button>
+                                {!(inactivo || sinStock) && (
+                                    <>
+                                        <button
+                                            onClick={e => {
+                                                e.stopPropagation();
+                                                handleRemoveFromCart(producto);
+                                            }}
+                                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded disabled:opacity-50"
+                                            disabled={cantidad < 1}
+                                            title="Quitar uno"
+                                        >
+                                            –
+                                        </button>
+                                        <span className="font-semibold text-gray-900 dark:text-white min-w-[2ch] text-center">{cantidad}</span>
+                                        <button
+                                            onClick={e => {
+                                                e.stopPropagation();
+                                                handleAddToCart(producto);
+                                            }}
+                                            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
+                                            title="Agregar uno"
+                                        >
+                                            +
+                                        </button>
+                                    </>
+                                )}
                             </div>
                         </div>
                     );
