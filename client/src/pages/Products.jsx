@@ -197,9 +197,8 @@ export default function Products() {
             </h1>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-7xl mx-auto animate-fadeInUp">
-                {productos.map((producto) => {
+                {productos.filter(producto => producto.status).map((producto) => {
                     const cantidad = cartInfo.items[producto.id] || 0;
-                    const inactivo = !producto.status;
                     const sinStock = !producto.stock || Number(producto.stock) <= 0;
                     return (
                         <div
@@ -207,9 +206,6 @@ export default function Products() {
                             className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 flex flex-col cursor-pointer hover:shadow-xl transition-shadow duration-300 relative"
                             onClick={() => setProductoSeleccionado(producto)}
                         >
-                            {inactivo && (
-                                <div className="absolute top-2 right-2 bg-yellow-500 text-white px-3 py-1 rounded font-bold text-xs shadow">INACTIVO</div>
-                            )}
                             {sinStock && (
                                 <div className="absolute top-2 left-2 bg-red-600 text-white px-3 py-1 rounded font-bold text-xs shadow">SIN STOCK</div>
                             )}
@@ -225,7 +221,7 @@ export default function Products() {
                                 ${producto.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </div>
                             <div className="flex items-center gap-2 mt-auto">
-                                {!(inactivo || sinStock) && (
+                                {!(sinStock) && (
                                     <>
                                         <button
                                             onClick={e => {
