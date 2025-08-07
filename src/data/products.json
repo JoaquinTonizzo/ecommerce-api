@@ -6,7 +6,7 @@
     "code": "AUR123",
     "price": 12999.99,
     "status": true,
-    "stock": 0,
+    "stock": 100,
     "category": "Audio",
     "thumbnails": []
   },
@@ -17,7 +17,7 @@
     "code": "AURC123",
     "price": 5999.99,
     "status": true,
-    "stock": 0,
+    "stock": 100,
     "category": "Audio",
     "thumbnails": []
   },
@@ -28,7 +28,7 @@
     "code": "SAM22",
     "price": 329999,
     "status": true,
-    "stock": 8,
+    "stock": 100,
     "category": "Electrónica",
     "thumbnails": []
   },
@@ -39,7 +39,7 @@
     "code": "LAPG123",
     "price": 159999,
     "status": true,
-    "stock": 9,
+    "stock": 100,
     "category": "Computación",
     "thumbnails": []
   },
@@ -50,7 +50,7 @@
     "code": "MON27UHD",
     "price": 49999.99,
     "status": true,
-    "stock": 11,
+    "stock": 100,
     "category": "Computación",
     "thumbnails": []
   },
@@ -61,7 +61,7 @@
     "code": "TECMECRGB",
     "price": 8999.99,
     "status": true,
-    "stock": 11,
+    "stock": 100,
     "category": "Accesorios",
     "thumbnails": []
   },
@@ -83,7 +83,7 @@
     "code": "SMRTWCH",
     "price": 19999.99,
     "status": true,
-    "stock": 11,
+    "stock": 100,
     "category": "Wearables",
     "thumbnails": []
   },
@@ -94,41 +94,8 @@
     "code": "CAMIPSEC",
     "price": 7499.99,
     "status": true,
-    "stock": 11,
+    "stock": 100,
     "category": "Seguridad",
-    "thumbnails": []
-  },
-  {
-    "id": "10",
-    "title": "Mouse RGB",
-    "description": "Mouse RGB Moderno",
-    "code": "MRGB5",
-    "price": 13999.99,
-    "status": true,
-    "stock": 10,
-    "category": "Computación",
-    "thumbnails": []
-  },
-  {
-    "id": "11",
-    "title": "Auriculares Redragon",
-    "description": "Auriculares Redragon",
-    "code": "AUR444",
-    "price": 15999.99,
-    "status": true,
-    "stock": 11,
-    "category": "Computación",
-    "thumbnails": []
-  },
-  {
-    "id": "12",
-    "title": "Auriculares Logitech",
-    "description": "Auriculares Logitech",
-    "code": "AUR444",
-    "price": 12999.99,
-    "status": true,
-    "stock": 11,
-    "category": "Computación",
     "thumbnails": []
   }
 ]

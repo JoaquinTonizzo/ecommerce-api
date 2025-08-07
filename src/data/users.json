@@ -1,99 +1,11 @@
 [
   {
     "id": "1",
-    "email": "usuario@gmail.com",
-    "password": "$2b$10$hjJQrqRq5KmorUdhghP1Y.evBgCInfox5cWIN3CbV/5LDdxFghUl.",
-    "firstName": "Usuario",
-    "lastName": "Test",
-    "role": "user",
-    "createdAt": "2025-08-05T21:12:43.550Z"
-  },
-  {
-    "id": "1",
     "email": "admin@gmail.com",
     "password": "$2b$10$hjJQrqRq5KmorUdhghP1Y.evBgCInfox5cWIN3CbV/5LDdxFghUl.",
     "firstName": "Admin",
     "lastName": "Test",
     "role": "admin",
     "createdAt": "2025-08-05T21:12:43.550Z"
-  },
-  {
-    "id": "2",
-    "email": "user2@gmail.com",
-    "password": "$2b$10$iu6Hoa0UXrAouKLyg6UMTeNtSIWlwIEnVdrdv845lF9DUExuJF4PS",
-    "firstName": "User2",
-    "lastName": "Test",
-    "role": "user",
-    "createdAt": "2025-08-05T21:50:11.324Z"
-  },
-  {
-    "id": "3",
-    "email": "usuario3@gmail.com",
-    "password": "$2b$10$LFbspACUBevnSD2FIO160.1Dw3A3E98fYj.D7BABLRn5rDPOrflw6",
-    "firstName": "Usuario",
-    "lastName": "Prueba",
-    "role": "user",
-    "createdAt": "2025-08-06T19:31:11.501Z"
-  },
-  {
-    "id": "b0c725f2-2a2d-4154-b003-9bdd99ef1a1c",
-    "email": "admin1@gmail.com",
-    "password": "$2b$10$6m5yWJom6zzXmZvMdDikMOdqJU2WsO08.UgsWnYM5G8zkaOHidQGW",
-    "firstName": "1",
-    "lastName": "1",
-    "role": "admin"
-  },
-  {
-    "id": "1a054791-e291-43b2-ab36-469c76f11145",
-    "email": "admin13@gmail.com",
-    "password": "$2b$10$3/vJGvbm24JkViTG5N.kNOcwxiigayUAa4OA4PcFzt5LT3ZV5sVaO",
-    "firstName": "1",
-    "lastName": "1",
-    "role": "admin"
-  },
-  {
-    "id": "NaN",
-    "email": "admin43@gmail.com",
-    "password": "$2b$10$/S2dJSnYzzeDDs9HgTgajOKvlKasI0yUfRhADFIwr8mARrKRAzhL.",
-    "firstName": "q",
-    "lastName": "q",
-    "role": "user",
-    "createdAt": "2025-08-06T21:03:06.697Z"
-  },
-  {
-    "id": "NaN",
-    "email": "admin5@gmail.com",
-    "password": "$2b$10$nn8ufrlIIsR5buKdjY6YceAV.rvZ0x/OvArrHjpEob9SDiXrqncqG",
-    "firstName": "1",
-    "lastName": "1",
-    "role": "user",
-    "createdAt": "2025-08-06T21:03:52.275Z"
-  },
-  {
-    "id": "NaN",
-    "email": "prueba@1.1",
-    "password": "$2b$10$O6ojMMTeDzpLuMz4.h6Q2eqQmUgwrPDF7WyRyuXNdSyFXeeCyqkfS",
-    "firstName": "1",
-    "lastName": "1",
-    "role": "user",
-    "createdAt": "2025-08-06T21:06:24.776Z"
-  },
-  {
-    "id": "NaN",
-    "email": "1@1.e",
-    "password": "$2b$10$VKcQ2EQUDgeN5sLGi8L9AeZ4/MWAsqPPsu.CuUX0alNYbVVtkm7TW",
-    "firstName": "1",
-    "lastName": "1",
-    "role": "user",
-    "createdAt": "2025-08-06T21:08:30.258Z"
-  },
-  {
-    "id": "NaN",
-    "email": "1@1.r",
-    "password": "$2b$10$SKCB./RToUGVwtovaOFyZeUEwFIbB10cilc92f0o0tWmAkToqKdVq",
-    "firstName": "1",
-    "lastName": "1",
-    "role": "user",
-    "createdAt": "2025-08-06T21:08:52.786Z"
   }
 ]
