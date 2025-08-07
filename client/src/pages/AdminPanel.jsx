@@ -31,6 +31,7 @@ export default function AdminPanel() {
     const [showActivos, setShowActivos] = useState(true);
     const [search, setSearch] = useState("");
     const [showList, setShowList] = useState(true);
+    const [stockFilter, setStockFilter] = useState('todos'); // 'todos', 'conStock', 'sinStock'
     const navigate = useNavigate();
     const API_URL = import.meta.env.VITE_API_URL;
 
@@ -279,6 +280,18 @@ export default function AdminPanel() {
                                     />
                                 </div>
                                 <div className="flex items-center gap-2">
+                                    <span className="font-semibold text-gray-700 dark:text-gray-200">Stock:</span>
+                                    <select
+                                        value={stockFilter}
+                                        onChange={e => setStockFilter(e.target.value)}
+                                        className="px-3 py-2 rounded-lg border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950 text-green-800 dark:text-green-100 text-sm font-medium"
+                                    >
+                                        <option value="todos">Todos</option>
+                                        <option value="conStock">Con stock</option>
+                                        <option value="sinStock">Sin stock</option>
+                                    </select>
+                                </div>
+                                <div className="flex items-center gap-2">
                                     <FaListAlt className="text-pink-400 text-lg" />
                                     <span className="font-semibold text-gray-700 dark:text-gray-200">Listado:</span>
                                     <button
@@ -295,10 +308,15 @@ export default function AdminPanel() {
                 )}
             </div>
             {/* Listado de productos filtrados */}
-            {showList && (
+            {showList && productsOpen && (
                 <ul className="space-y-4 max-w-3xl mx-auto">
                     {products
                         .filter(p => showActivos ? p.status : !p.status)
+                        .filter(p => {
+                            if (stockFilter === 'conStock') return p.stock > 0;
+                            if (stockFilter === 'sinStock') return p.stock === 0;
+                            return true;
+                        })
                         .filter(p => !search || p.title.toLowerCase().includes(search.toLowerCase()))
                         .map((p) => (
                             <li key={p._id || p.id} className="bg-white dark:bg-gray-800 p-4 rounded shadow flex items-center gap-4">
