@@ -28,7 +28,13 @@ export default function EditProductModal({ open, product, onSave, onCancel }) {
 
     function handleChange(e) {
         const { name, value } = e.target;
-        setForm({ ...form, [name]: name === 'status' ? value === 'true' : value });
+        let newValue = value;
+        if (name === 'status') {
+            newValue = value === 'true';
+        } else if (name === 'stock' || name === 'price') {
+            newValue = value === '' ? '' : Number(value);
+        }
+        setForm({ ...form, [name]: newValue });
     }
 
     function handleThumbnails(e) {

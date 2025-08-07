@@ -145,6 +145,24 @@ export default function Cart() {
         }
     }
 
+    // Nueva función para productos inactivos o sin stock
+    async function handleRemoveInactiveOrNoStock(product) {
+        if (!token || !cartId || product.quantity === 0) return;
+        try {
+            // DELETE para eliminar producto
+            const res = await fetch(`http://localhost:8080/api/carts/${cartId}/product/${product.id}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Error al quitar producto');
+            setProducts(prev => prev.filter(p => p.id !== product.id));
+            toast.success('Producto quitado del carrito');
+        } catch (err) {
+            toast.error(err.message);
+        }
+    }
+
     async function cargarHistorial() {
         try {
             setError(null);
@@ -207,9 +225,31 @@ export default function Cart() {
                                     <p className="text-gray-700 dark:text-gray-300">
                                         Precio: ${typeof p.price === 'number' ? p.price.toFixed(2) : 'N/A'}
                                     </p>
+                                    {(p.stock === 0 || p.status === false) && (
+                                        <div className="mt-2 flex gap-2 items-center">
+                                            {p.stock === 0 && (
+                                                <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-gradient-to-r from-red-400 to-red-600 text-white text-xs font-bold shadow">
+                                                    Sin stock
+                                                </span>
+                                            )}
+                                            {p.status === false && (
+                                                <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-gradient-to-r from-gray-500 to-gray-700 text-white text-xs font-bold shadow">
+                                                    Producto inactivo
+                                                </span>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    {p.quantity > 1 ? (
+                                    {(p.stock === 0 || p.status === false) ? (
+                                        <button
+                                            onClick={() => handleRemoveInactiveOrNoStock(p)}
+                                            className="bg-gray-300 hover:bg-red-600 text-gray-700 hover:text-white px-3 py-1 rounded"
+                                            title="Eliminar producto"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                                        </button>
+                                    ) : p.quantity > 1 ? (
                                         <button
                                             onClick={() => handleRemoveFromCart(p)}
                                             className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
@@ -227,13 +267,15 @@ export default function Cart() {
                                         </button>
                                     )}
                                     <span className="px-2 text-sm font-semibold text-gray-900 dark:text-white min-w-[2ch] text-center">{p.quantity}u</span>
-                                    <button
-                                        onClick={() => handleAddToCart(p)}
-                                        className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
-                                        title="Agregar uno"
-                                    >
-                                        +
-                                    </button>
+                                    {(p.stock > 0 && p.status !== false) && (
+                                        <button
+                                            onClick={() => handleAddToCart(p)}
+                                            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
+                                            title="Agregar uno"
+                                        >
+                                            +
+                                        </button>
+                                    )}
                                 </div>
                                 <span className="px-2 font-semibold text-gray-900 dark:text-white">
                                     ${(p.price * p.quantity).toFixed(2)}
@@ -252,7 +294,7 @@ export default function Cart() {
                                         headers: { Authorization: `Bearer ${token}` },
                                     });
                                     const data = await res.json();
-                                    if (!res.ok) throw new Error(data.error || 'Error al pagar carrito');
+                                    if (!res.ok) throw new Error(data.error || 'Error al pagar carrito. Por Favor, refresca la página e intenta nuevamente.');
                                     toast.success('Compra realizada con éxito');
                                     setProducts([]);
                                     setCartId(null);

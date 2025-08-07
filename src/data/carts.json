@@ -137,12 +137,17 @@
     "userId": "1",
     "products": [
       {
-        "productId": "1",
+        "productId": "3",
+        "quantity": 3
+      },
+      {
+        "productId": "4",
         "quantity": 2
       }
     ],
-    "status": "in_progress",
-    "createdAt": "2025-08-06T20:25:10.942Z"
+    "status": "paid",
+    "createdAt": "2025-08-06T20:25:10.942Z",
+    "paidAt": "2025-08-07T11:19:10.324Z"
   },
   {
     "id": "10",
