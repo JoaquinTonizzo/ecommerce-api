@@ -28,7 +28,7 @@
     "code": "SAM22",
     "price": 329999,
     "status": true,
-    "stock": 0,
+    "stock": "5",
     "category": "Electrónica",
     "thumbnails": []
   },
@@ -39,7 +39,7 @@
     "code": "LAPG123",
     "price": 159999,
     "status": true,
-    "stock": 0,
+    "stock": "1",
     "category": "Computación",
     "thumbnails": []
   },

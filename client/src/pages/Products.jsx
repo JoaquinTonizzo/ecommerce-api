@@ -183,12 +183,20 @@ export default function Products() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-7xl mx-auto animate-fadeInUp">
                 {productos.map((producto) => {
                     const cantidad = cartInfo.items[producto.id] || 0;
+                    const inactivo = !producto.status;
+                    const sinStock = !producto.stock || Number(producto.stock) <= 0;
                     return (
                         <div
                             key={producto.id}
-                            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 flex flex-col cursor-pointer hover:shadow-xl transition-shadow duration-300"
+                            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 flex flex-col cursor-pointer hover:shadow-xl transition-shadow duration-300 relative"
                             onClick={() => setProductoSeleccionado(producto)}
                         >
+                            {inactivo && (
+                                <div className="absolute top-2 right-2 bg-yellow-500 text-white px-3 py-1 rounded font-bold text-xs shadow">INACTIVO</div>
+                            )}
+                            {sinStock && (
+                                <div className="absolute top-2 left-2 bg-red-600 text-white px-3 py-1 rounded font-bold text-xs shadow">SIN STOCK</div>
+                            )}
                             <img
                                 src={producto.thumbnails?.[0] || 'https://placehold.co/600x400'}
                                 alt={producto.title}
@@ -200,7 +208,6 @@ export default function Products() {
                             <div className="text-lg font-bold text-blue-700 dark:text-blue-400 mb-3">
                                 ${producto.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </div>
-
                             <div className="flex items-center gap-2 mt-auto">
                                 <button
                                     onClick={e => {
@@ -208,7 +215,7 @@ export default function Products() {
                                         handleRemoveFromCart(producto);
                                     }}
                                     className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded disabled:opacity-50"
-                                    disabled={cantidad <= 1}
+                                    disabled={cantidad <= 1 || inactivo || sinStock}
                                     title="Quitar uno"
                                 >
                                     –
@@ -221,6 +228,7 @@ export default function Products() {
                                     }}
                                     className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
                                     title="Agregar uno"
+                                    disabled={inactivo || sinStock}
                                 >
                                     +
                                 </button>
