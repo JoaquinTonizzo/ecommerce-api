@@ -6,6 +6,7 @@ import ConfirmModal from '../components/ConfirmModal';
 import EditProductModal from '../components/EditProductModal';
 import CreateProductModal from '../components/CreateProductModal';
 import CreateAdminModal from '../components/CreateAdminModal';
+import HistoryModal from '../components/HistoryModal';
 
 export default function AdminPanel() {
     const [user, setUser] = useState(null);
@@ -224,31 +225,12 @@ export default function AdminPanel() {
             />
 
             {/* Modal para historial de compras */}
-            {showHistory && (
-                <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-                    <div className="bg-white dark:bg-gray-800 p-8 rounded shadow-lg w-full max-w-2xl relative max-h-[80vh] overflow-y-auto">
-                        <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Historial de compras</h2>
-                        {loadingHistory ? (
-                            <div className="text-center">Cargando...</div>
-                        ) : history.length === 0 ? (
-                            <div className="text-center text-gray-500">No hay compras registradas.</div>
-                        ) : (
-                            <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-                                {history.map((h, i) => (
-                                    <li key={h.id || i} className="py-2">
-                                        <div className="font-semibold text-gray-900 dark:text-white">Carrito: {h.id || 'N/A'} - Estado: {h.status || 'N/A'}</div>
-                                        <div className="text-sm text-gray-700 dark:text-gray-300">Usuario: {h.userId || 'N/A'}</div>
-                                        <div className="text-sm text-gray-700 dark:text-gray-300">Productos: {Array.isArray(h.products) ? h.products.map(p => `${p.title || p.productId} x${p.quantity}`).join(', ') : 'N/A'}</div>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                        <div className="flex justify-end mt-4">
-                            <button className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded" onClick={() => setShowHistory(false)}>Cerrar</button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <HistoryModal
+                open={showHistory}
+                loading={loadingHistory}
+                history={history}
+                onClose={() => setShowHistory(false)}
+            />
 
             <CreateProductModal
                 open={showCreate}
