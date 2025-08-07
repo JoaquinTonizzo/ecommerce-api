@@ -1,21 +1,16 @@
 # Dependency directories
 node_modules/
-dist/
-build/
-dist-ssr/
-.next/
-.nuxt/
-.vuepress/dist/
-.cache/
-.parcel-cache/
-.serverless/
-.fusebox/
-.dynamodb/
 
 # Build outputs
+dist/
+build/
+.out/
 out/
-coverage/
-.nyc_output/
+
+# Vite / CRA cache
+.vite/
+.cache/
+.parcel-cache/
 
 # Logs
 logs/
@@ -34,7 +29,6 @@ lerna-debug.log*
 .vscode/
 !.vscode/extensions.json
 .idea/
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
@@ -42,6 +36,7 @@ lerna-debug.log*
 *.sw?
 
 # OS generated files
+.DS_Store
 .DS_Store?
 ._*
 .Spotlight-V100
@@ -56,40 +51,27 @@ pids/
 *.seed
 *.pid.lock
 
-# Optional npm cache directory
+# npm / Yarn cache
 .npm/
+.yarn-integrity
 
-# Optional eslint cache
+# ESLint / coverage / testing
 .eslintcache
+coverage/
+.nyc_output/
+*.lcov
 
-# Microbundle cache
-.rpt2_cache/
-.rts2_cache_cjs/
-.rts2_cache_es/
-.rts2_cache_umd/
-
-# Optional REPL history
+# REPL history
 .node_repl_history
 
-# Output of 'npm pack'
+# Output of `npm pack`
 *.tgz
-
-# Yarn Integrity file
-.yarn-integrity
 
 # Temporary folders
 tmp/
 temp/
 
-# VSCode test folders
-.vscode-test/
-
-# Ignore test coverage
-*.lcov
-
-# Ignore Mac system files
+# Mac / Linux system files
 .AppleDouble
 .LSOverride
-
-# Ignore Linux system files
 *~
