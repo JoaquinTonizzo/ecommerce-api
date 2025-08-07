@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 export default function HistoryModal({ open, loading, history, onClose }) {
     const [expanded, setExpanded] = useState({});
     const [details, setDetails] = useState({});
+    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         // Limpia detalles al cerrar modal
@@ -14,7 +15,7 @@ export default function HistoryModal({ open, loading, history, onClose }) {
         const productosConDetalles = await Promise.all(
             products.map(async (p) => {
                 try {
-                    const res = await fetch(`http://localhost:8080/api/products/${p.productId}`);
+                    const res = await fetch(`${API_URL}/api/products/${p.productId}`);
                     if (!res.ok) return { ...p, title: 'Producto eliminado', price: 0 };
                     const prod = await res.json();
                     return { ...prod, quantity: p.quantity };

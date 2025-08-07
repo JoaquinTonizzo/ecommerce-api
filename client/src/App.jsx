@@ -3,8 +3,6 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Cart from './pages/Cart';
 import Products from './pages/Products';
-import Login from './pages/Login';
-import Register from './pages/Register';
 import AdminPanel from './pages/AdminPanel';
 import Auth from './pages/Auth';
 
@@ -16,8 +14,6 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/products" element={<Products />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/auth" element={<Auth />} />
       </Routes>

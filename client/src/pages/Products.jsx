@@ -9,14 +9,14 @@ export default function Products() {
     const [error, setError] = useState(null);
     const [productoSeleccionado, setProductoSeleccionado] = useState(null);
     const [cartInfo, setCartInfo] = useState({ cartId: null, items: {} }); // { cartId, items: { [productId]: quantity } }
-
+    const API_URL = import.meta.env.VITE_API_URL;
     const modalRef = useRef();
 
     useEffect(() => {
         async function fetchProductos() {
             try {
                 setLoading(true);
-                const res = await fetch('http://localhost:8080/api/products/');
+                const res = await fetch(`${API_URL}/api/products/`);
                 if (!res.ok) throw new Error('Error al cargar productos');
                 const data = await res.json();
                 setProductos(data);
@@ -32,7 +32,7 @@ export default function Products() {
             if (!token) return;
             try {
                 // Obtener historial
-                const historyRes = await fetch('http://localhost:8080/api/carts/history', {
+                const historyRes = await fetch(`${API_URL}/api/carts/history`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const history = await historyRes.json();
@@ -41,7 +41,7 @@ export default function Products() {
                 // Buscar carrito en progreso o crear uno
                 let carritoEnProgreso = history.find(c => c.status !== 'paid');
                 if (!carritoEnProgreso) {
-                    const createRes = await fetch('http://localhost:8080/api/carts', {
+                    const createRes = await fetch(`${API_URL}/api/carts`, {
                         method: 'POST',
                         headers: { Authorization: `Bearer ${token}` },
                     });
@@ -51,7 +51,7 @@ export default function Products() {
                 }
 
                 // Obtener productos del carrito
-                const cartRes = await fetch(`http://localhost:8080/api/carts/${carritoEnProgreso.id}`, {
+                const cartRes = await fetch(`${API_URL}/api/carts/${carritoEnProgreso.id}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const cartProducts = await cartRes.json();
@@ -121,7 +121,7 @@ export default function Products() {
             let cartId = cartInfo.cartId;
             // Si no hay carrito, crear uno
             if (!cartId) {
-                const createRes = await fetch('http://localhost:8080/api/carts', {
+                const createRes = await fetch(`${API_URL}/api/carts`, {
                     method: 'POST',
                     headers: { Authorization: `Bearer ${token}` },
                 });
@@ -130,7 +130,7 @@ export default function Products() {
                 cartId = nuevoCarrito.id;
             }
             // Agregar producto
-            const addRes = await fetch(`http://localhost:8080/api/carts/${cartId}/product/${producto.id}`, {
+            const addRes = await fetch(`${API_URL}/api/carts/${cartId}/product/${producto.id}`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -154,7 +154,7 @@ export default function Products() {
         try {
             if (cantidadActual === 1) {
                 // Eliminar producto del carrito
-                const res = await fetch(`http://localhost:8080/api/carts/${cartInfo.cartId}/product/${producto.id}`, {
+                const res = await fetch(`${API_URL}/api/carts/${cartInfo.cartId}/product/${producto.id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` },
                 });
@@ -168,7 +168,7 @@ export default function Products() {
                 toast.success('Producto quitado del carrito');
             } else {
                 const nuevaCantidad = cantidadActual - 1;
-                const res = await fetch(`http://localhost:8080/api/carts/${cartInfo.cartId}/product/${producto.id}`, {
+                const res = await fetch(`${API_URL}/api/carts/${cartInfo.cartId}/product/${producto.id}`, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${token}`,

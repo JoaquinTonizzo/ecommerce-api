@@ -15,6 +15,7 @@ export default function Cart() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const token = localStorage.getItem('token');
+    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         // Redirigir si no hay usuario o si es admin
@@ -33,7 +34,7 @@ export default function Cart() {
             // Obtener detalles de cada producto con su productId
             const detalles = await Promise.all(
                 productsInCart.map(async ({ productId, quantity }) => {
-                    const res = await fetch(`http://localhost:8080/api/products/${productId}`);
+                    const res = await fetch(`${API_URL}/api/products/${productId}`);
                     if (!res.ok) throw new Error('Error al cargar producto ' + productId);
                     const product = await res.json();
                     return { ...product, quantity };
@@ -48,7 +49,7 @@ export default function Cart() {
                 setError(null);
 
                 // Obtener historial para buscar carrito in_progress
-                const historyRes = await fetch('http://localhost:8080/api/carts/history', {
+                const historyRes = await fetch(`${API_URL}/api/carts/history`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const history = await historyRes.json();
@@ -62,7 +63,7 @@ export default function Cart() {
                     carritoId = carritoEnProgreso.id;
                 } else {
                     // Crear nuevo carrito
-                    const createRes = await fetch('http://localhost:8080/api/carts/', {
+                    const createRes = await fetch(`${API_URL}/api/carts/`, {
                         method: 'POST',
                         headers: { Authorization: `Bearer ${token}` },
                     });
@@ -74,7 +75,7 @@ export default function Cart() {
                 setCartId(carritoId);
 
                 // Obtener productos (ids y cantidades) del carrito
-                const productosRes = await fetch(`http://localhost:8080/api/carts/${carritoId}`, {
+                const productosRes = await fetch(`${API_URL}/api/carts/${carritoId}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 const productosInCart = await productosRes.json();
@@ -99,7 +100,7 @@ export default function Cart() {
     async function handleAddToCart(product) {
         if (!token || !cartId) return;
         try {
-            const res = await fetch(`http://localhost:8080/api/carts/${cartId}/product/${product.id}`, {
+            const res = await fetch(`${API_URL}/api/carts/${cartId}/product/${product.id}`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -117,7 +118,7 @@ export default function Cart() {
         try {
             if (product.quantity > 1) {
                 // PUT para actualizar cantidad
-                const res = await fetch(`http://localhost:8080/api/carts/${cartId}/product/${product.id}`, {
+                const res = await fetch(`${API_URL}/api/carts/${cartId}/product/${product.id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -131,7 +132,7 @@ export default function Cart() {
                 toast.success('Cantidad actualizada');
             } else {
                 // DELETE para eliminar producto
-                const res = await fetch(`http://localhost:8080/api/carts/${cartId}/product/${product.id}`, {
+                const res = await fetch(`${API_URL}/api/carts/${cartId}/product/${product.id}`, {
                     method: 'DELETE',
                     headers: { Authorization: `Bearer ${token}` },
                 });
@@ -150,7 +151,7 @@ export default function Cart() {
         if (!token || !cartId || product.quantity === 0) return;
         try {
             // DELETE para eliminar producto
-            const res = await fetch(`http://localhost:8080/api/carts/${cartId}/product/${product.id}`, {
+            const res = await fetch(`${API_URL}/api/carts/${cartId}/product/${product.id}`, {
                 method: 'DELETE',
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -166,7 +167,7 @@ export default function Cart() {
     async function cargarHistorial() {
         try {
             setError(null);
-            const res = await fetch('http://localhost:8080/api/carts/history', {
+            const res = await fetch(`${API_URL}/api/carts/history`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const data = await res.json();
@@ -178,7 +179,7 @@ export default function Cart() {
                     // carrito.products: [{ productId, quantity }]
                     const productos = await Promise.all(
                         (carrito.products || []).map(async ({ productId, quantity }) => {
-                            const res = await fetch(`http://localhost:8080/api/products/${productId}`);
+                            const res = await fetch(`${API_URL}/api/products/${productId}`);
                             if (!res.ok) return { title: 'Producto eliminado', price: 0, quantity };
                             const prod = await res.json();
                             return { ...prod, quantity };
@@ -289,7 +290,7 @@ export default function Cart() {
                         <button
                             onClick={async () => {
                                 try {
-                                    const res = await fetch(`http://localhost:8080/api/carts/${cartId}/pay`, {
+                                    const res = await fetch(`${API_URL}/api/carts/${cartId}/pay`, {
                                         method: 'POST',
                                         headers: { Authorization: `Bearer ${token}` },
                                     });

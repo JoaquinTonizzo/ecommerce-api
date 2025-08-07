@@ -11,6 +11,7 @@ export default function Auth() {
     const [registerForm, setRegisterForm] = useState({ firstName: '', lastName: '', email: '', password: '' });
     const navigate = useNavigate();
     const { user, setUser } = useContext(UserContext);
+    const API_URL = import.meta.env.VITE_API_URL;
 
     // Si ya está logueado, redirigir a home
     React.useEffect(() => {
@@ -22,7 +23,7 @@ export default function Auth() {
     async function handleLogin(e) {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:8080/api/auth/login', {
+            const res = await fetch(`${API_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(loginForm),
@@ -48,7 +49,7 @@ export default function Auth() {
     async function handleRegister(e) {
         e.preventDefault();
         try {
-            const res = await fetch('http://localhost:8080/api/auth/register', {
+            const res = await fetch(`${API_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(registerForm),

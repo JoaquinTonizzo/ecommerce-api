@@ -24,13 +24,14 @@ export default function AdminPanel() {
     const [loadingHistory, setLoadingHistory] = useState(false);
     const [showActivos, setShowActivos] = useState(true);
     const navigate = useNavigate();
+    const API_URL = import.meta.env.VITE_API_URL;
 
     async function handleShowHistory() {
         setShowHistory(true);
         setLoadingHistory(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('http://localhost:8080/api/carts/paid', {
+            const res = await fetch(`${API_URL}/api/carts/paid`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const data = await res.json();
@@ -46,7 +47,7 @@ export default function AdminPanel() {
     async function handleCreateAdmin(form) {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('http://localhost:8080/api/admin/create-admin', {
+            const res = await fetch(`${API_URL}/api/admin/create-admin`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -67,7 +68,7 @@ export default function AdminPanel() {
         // Obtener usuario desde el token (ejemplo simple)
         const token = localStorage.getItem('token');
         if (!token) {
-            navigate('/login');
+            navigate('/auth');
             return;
         }
         // Decodificar el token para obtener el rol (puedes usar jwt-decode)
@@ -78,7 +79,7 @@ export default function AdminPanel() {
                 navigate('/');
             }
         } catch {
-            navigate('/login');
+            navigate('/auth');
         }
     }, [navigate]);
 
@@ -86,7 +87,7 @@ export default function AdminPanel() {
         async function fetchProducts() {
             try {
                 setLoading(true);
-                const res = await fetch('http://localhost:8080/api/products/');
+                const res = await fetch(`${API_URL}/api/products/`);
                 const data = await res.json();
                 setProducts(data);
             } catch (err) {
@@ -107,7 +108,7 @@ export default function AdminPanel() {
         try {
             const token = localStorage.getItem('token');
             // Cambia el estado a inactivo y el stock a 0
-            const res = await fetch(`http://localhost:8080/api/products/${deleteId}`, {
+            const res = await fetch(`${API_URL}/api/products/${deleteId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -128,7 +129,7 @@ export default function AdminPanel() {
     async function handleReactivate(id) {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:8080/api/products/${id}`, {
+            const res = await fetch(`${API_URL}/api/products/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -152,7 +153,7 @@ export default function AdminPanel() {
     async function saveEdit(form) {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:8080/api/products/${editProduct.id}`, {
+            const res = await fetch(`${API_URL}/api/products/${editProduct.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -173,7 +174,7 @@ export default function AdminPanel() {
     async function saveCreate(form) {
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch('http://localhost:8080/api/products/', {
+            const res = await fetch(`${API_URL}/api/products/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
