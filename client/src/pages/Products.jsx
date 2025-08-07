@@ -6,6 +6,10 @@ import { UserContext } from '../context/UserContext';
 
 export default function Products() {
     const [productos, setProductos] = useState([]);
+    const [busqueda, setBusqueda] = useState('');
+    const [filtroCategoria, setFiltroCategoria] = useState('');
+    const [filtroStock, setFiltroStock] = useState('all');
+    const [filtroPrecio, setFiltroPrecio] = useState([0, 999999]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [productoSeleccionado, setProductoSeleccionado] = useState(null);
@@ -32,6 +36,9 @@ export default function Products() {
         }
         fetchProductos();
     }, []);
+
+    // Obtener categorías únicas
+    const categorias = Array.from(new Set(productos.map(p => p.category).filter(Boolean)));
 
     useEffect(() => {
         async function fetchCart() {
@@ -227,22 +234,92 @@ export default function Products() {
     }
     }
 
+    // Filtro y búsqueda
+    const productosFiltrados = productos
+        .filter(producto => producto.status)
+        .filter(producto =>
+            producto.title.toLowerCase().includes(busqueda.toLowerCase())
+        )
+        .filter(producto =>
+            filtroCategoria ? producto.category === filtroCategoria : true
+        )
+        .filter(producto =>
+            filtroStock === 'all' ? true : filtroStock === 'in' ? Number(producto.stock) > 0 : Number(producto.stock) <= 0
+        )
+        .filter(producto =>
+            producto.price >= filtroPrecio[0] && producto.price <= filtroPrecio[1]
+        );
+
     return (
-        <main className="min-h-screen bg-gray-50 dark:bg-gray-900 px-6 py-12">
+        <main className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-100 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-6 py-12">
             <ToastContainer position="top-right" autoClose={2500} hideProgressBar={false} newestOnTop closeOnClick pauseOnFocusLoss draggable pauseOnHover theme="colored" />
             <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-10 text-center animate-fadeInDown">
                 Nuestros Productos
             </h1>
 
+            {/* Barra de búsqueda y filtros */}
+            <section className="max-w-7xl mx-auto mb-10 animate-fadeInUp">
+                <div className="flex flex-wrap gap-4 items-center justify-between bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-4">
+                    <input
+                        type="text"
+                        placeholder="Buscar productos..."
+                        value={busqueda}
+                        onChange={e => setBusqueda(e.target.value)}
+                        className="w-full sm:w-64 px-4 py-2 rounded-lg border border-blue-300 dark:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-900 dark:text-white transition"
+                    />
+                    <select
+                        value={filtroCategoria}
+                        onChange={e => setFiltroCategoria(e.target.value)}
+                        className="w-full sm:w-48 px-4 py-2 rounded-lg border border-purple-300 dark:border-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400 dark:bg-gray-900 dark:text-white transition"
+                    >
+                        <option value="">Todas las categorías</option>
+                        {categorias.map(cat => (
+                            <option key={cat} value={cat}>{cat}</option>
+                        ))}
+                    </select>
+                    <select
+                        value={filtroStock}
+                        onChange={e => setFiltroStock(e.target.value)}
+                        className="w-full sm:w-40 px-4 py-2 rounded-lg border border-green-300 dark:border-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 dark:bg-gray-900 dark:text-white transition"
+                    >
+                        <option value="all">Todos</option>
+                        <option value="in">Con stock</option>
+                        <option value="out">Sin stock</option>
+                    </select>
+                    <div className="flex flex-col sm:flex-row gap-2 items-center">
+                        <label className="text-sm text-gray-700 dark:text-gray-300">Precio:</label>
+                        <input
+                            type="number"
+                            min={0}
+                            max={filtroPrecio[1]}
+                            value={filtroPrecio[0]}
+                            onChange={e => setFiltroPrecio([Number(e.target.value), filtroPrecio[1]])}
+                            className="w-20 px-2 py-1 rounded border border-blue-200 dark:border-blue-700 focus:outline-none dark:bg-gray-900 dark:text-white"
+                        />
+                        <span className="mx-1 text-gray-500 dark:text-gray-400">-</span>
+                        <input
+                            type="number"
+                            min={filtroPrecio[0]}
+                            value={filtroPrecio[1]}
+                            onChange={e => setFiltroPrecio([filtroPrecio[0], Number(e.target.value)])}
+                            className="w-20 px-2 py-1 rounded border border-blue-200 dark:border-blue-700 focus:outline-none dark:bg-gray-900 dark:text-white"
+                        />
+                    </div>
+                </div>
+                <div className="text-right text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    {productosFiltrados.length} producto{productosFiltrados.length === 1 ? '' : 's'} encontrados
+                </div>
+            </section>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-7xl mx-auto animate-fadeInUp">
-                {productos.filter(producto => producto.status).map((producto) => {
+                {productosFiltrados.map((producto) => {
                     const cantidad = cartInfo.items[producto._id] || 0;
                     const sinStock = !producto.stock || Number(producto.stock) <= 0;
                     const disableCartActions = isAdmin || sinStock;
                     return (
                         <div
                             key={producto._id}
-                            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 flex flex-col cursor-pointer hover:shadow-xl transition-shadow duration-300 relative"
+                            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 flex flex-col cursor-pointer hover:scale-105 hover:shadow-2xl transition-all duration-300 relative border-b-4 border-blue-200 dark:border-blue-700"
                             onClick={() => setProductoSeleccionado(producto)}
                         >
                             {sinStock && (
@@ -251,7 +328,7 @@ export default function Products() {
                             <img
                                 src={producto.thumbnails?.[0] || 'https://placehold.co/600x400'}
                                 alt={producto.title}
-                                className="w-full h-48 object-cover rounded-md mb-4"
+                                className="w-full h-48 object-cover rounded-md mb-4 shadow-md"
                             />
                             <h2 className="text-xl font-semibold mb-1 text-gray-900 dark:text-white">
                                 {producto.title}
