@@ -7,5 +7,14 @@
     "lastName": "Test",
     "role": "admin",
     "createdAt": "2025-08-05T21:12:43.550Z"
+  },
+  {
+    "id": "2",
+    "email": "usuario@gmail.com",
+    "password": "$2b$10$PbOOybUvEdETRBWeGCptYu0LKOCJegZ0dUTRxzRvzT5g1QybMJrvO",
+    "firstName": "Usuario",
+    "lastName": "Test",
+    "role": "user",
+    "createdAt": "2025-08-07T11:32:14.662Z"
   }
 ]

@@ -144,13 +144,9 @@ class CartManager {
       throw error;
     }
 
-    // Reducimos la cantidad del producto en 1
-    cart.products[productIndex].quantity -= 1;
 
-    // Si la cantidad llega a cero o menos, eliminamos el producto del carrito
-    if (cart.products[productIndex].quantity <= 0) {
-      cart.products.splice(productIndex, 1);
-    }
+    // Eliminar el producto del carrito directamente
+    cart.products.splice(productIndex, 1);
 
     // Actualizamos el carrito en la lista y escribimos en el archivo
     carts[cartIndex] = cart;
