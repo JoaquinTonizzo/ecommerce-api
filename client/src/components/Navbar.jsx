@@ -133,19 +133,28 @@ function Navbar() {
                                         Perfil
                                     </button>
                                     {profileOpen && (
-                                        <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4 z-50">
-                                            <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">Email: {user.email}</div>
-                                            <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">Rol: {user.role}</div>
-                                            <button
-                                                onClick={() => {
-                                                    localStorage.removeItem('token');
-                                                    window.location.reload();
-                                                }}
-                                                className="mt-3 w-full px-4 py-2 rounded bg-red-600 text-white font-semibold hover:bg-red-700 transition"
+                                        <>
+                                            <div
+                                                className="fixed inset-0 z-40"
+                                                onClick={() => setProfileOpen(false)}
+                                            />
+                                            <div
+                                                className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4 z-50"
+                                                onClick={e => e.stopPropagation()}
                                             >
-                                                Cerrar sesión
-                                            </button>
-                                        </div>
+                                                <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">Email: {user.email}</div>
+                                                <div className="text-sm text-gray-700 dark:text-gray-300 mb-1">Rol: {user.role}</div>
+                                                <button
+                                                    onClick={() => {
+                                                        localStorage.removeItem('token');
+                                                        window.location.reload();
+                                                    }}
+                                                    className="mt-3 w-full px-4 py-2 rounded bg-red-600 text-white font-semibold hover:bg-red-700 transition"
+                                                >
+                                                    Cerrar sesión
+                                                </button>
+                                            </div>
+                                        </>
                                     )}
                                 </li>
                             </>
