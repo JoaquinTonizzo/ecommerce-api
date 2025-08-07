@@ -117,7 +117,7 @@ export default function AdminPanel() {
                 body: JSON.stringify({ status: false, stock: 0 }),
             });
             if (!res.ok) throw new Error('Error al eliminar');
-            setProducts(products.map(p => p.id === deleteId ? { ...p, status: false, stock: 0 } : p));
+            setProducts(products.map(p => (p._id === deleteId || p.id === deleteId) ? { ...p, status: false, stock: 0 } : p));
         } catch {
             alert('No se pudo eliminar el producto');
         } finally {
@@ -138,7 +138,7 @@ export default function AdminPanel() {
                 body: JSON.stringify({ status: true }),
             });
             if (!res.ok) throw new Error('Error al reactivar');
-            setProducts(products.map(p => p.id === id ? { ...p, status: true } : p));
+            setProducts(products.map(p => (p._id === id || p.id === id) ? { ...p, status: true } : p));
             toast.success('Producto reactivado');
         } catch {
             toast.error('No se pudo reactivar el producto');
@@ -152,21 +152,28 @@ export default function AdminPanel() {
 
     async function saveEdit(form) {
         try {
+            // Mostrar datos recibidos
+            console.log('AdminPanel: saveEdit form:', form);
             const token = localStorage.getItem('token');
-            const res = await fetch(`${API_URL}/api/products/${editProduct.id}`, {
+            // Usar id recibido del modal
+            const productId = form.id;
+            console.log('AdminPanel: saveEdit productId:', productId);
+            console.log('AdminPanel: saveEdit body:', form.body);
+            const res = await fetch(`${API_URL}/api/products/${productId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ ...form, id: undefined }),
+                body: JSON.stringify(form.body),
             });
             if (!res.ok) throw new Error('Error al editar producto');
             const updated = await res.json();
-            setProducts(products.map(p => p.id === editProduct.id ? updated : p));
+            setProducts(products.map(p => (p._id === productId || p.id === productId) ? updated : p));
             setShowEdit(false);
             setEditProduct(null);
-        } catch {
+        } catch (err) {
+            console.error('AdminPanel: saveEdit error:', err);
             alert('No se pudo editar el producto');
         }
     }
@@ -226,7 +233,7 @@ export default function AdminPanel() {
             </div>
             <ul className="space-y-4 max-w-3xl mx-auto">
                 {products.filter(p => showActivos ? p.status : !p.status).map((p) => (
-                    <li key={p.id} className="bg-white dark:bg-gray-800 p-4 rounded shadow flex justify-between items-center">
+                    <li key={p._id || p.id} className="bg-white dark:bg-gray-800 p-4 rounded shadow flex justify-between items-center">
                         <div>
                             <h2 className="font-semibold text-lg text-gray-900 dark:text-white">{p.title}</h2>
                             <p className="text-gray-700 dark:text-gray-300">${typeof p.price === 'number' ? p.price.toFixed(2) : 'N/A'}</p>
@@ -241,14 +248,14 @@ export default function AdminPanel() {
                             </button>
                             {p.status ? (
                                 <button
-                                    onClick={() => handleDelete(p.id)}
+                                    onClick={() => handleDelete(p._id || p.id)}
                                     className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded"
                                 >
                                     Eliminar
                                 </button>
                             ) : (
                                 <button
-                                    onClick={() => handleReactivate(p.id)}
+                                    onClick={() => handleReactivate(p._id || p.id)}
                                     className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded"
                                 >
                                     Reactivar

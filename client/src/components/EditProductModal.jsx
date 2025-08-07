@@ -52,8 +52,24 @@ export default function EditProductModal({ open, product, onSave, onCancel }) {
             setWarning('No hay cambios para guardar');
             return;
         }
+        // Eliminar id/_id del objeto antes de guardar
+        const { _id, id, ...body } = form;
+        // El id debe venir del prop product, si no existe, del form
+        let productId = product?._id || product?.id;
+        console.log('EditProductModal: product prop:', product);
+        console.log('EditProductModal: form:', form);
+        if (!productId) {
+            productId = _id || id;
+        }
+        console.log('EditProductModal: resolved productId:', productId);
+        console.log('EditProductModal: body to send:', body);
+        if (!productId) {
+            setWarning('No se puede guardar: producto sin identificador');
+            return;
+        }
         setWarning('');
-        onSave(form);
+        // onSave recibe {id, body}
+        onSave({ id: productId, body });
     }
 
     return (
