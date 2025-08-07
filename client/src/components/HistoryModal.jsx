@@ -14,8 +14,9 @@ export default function HistoryModal({ open, loading, history, onClose }) {
         if (details[cartId]) return; // Ya cargado
         const productosConDetalles = await Promise.all(
             products.map(async (p) => {
+                const prodId = p.productId?._id || p.productId || p._id;
                 try {
-                    const res = await fetch(`${API_URL}/api/products/${p.productId}`);
+                    const res = await fetch(`${API_URL}/api/products/${prodId}`);
                     if (!res.ok) return { ...p, title: 'Producto eliminado', price: 0 };
                     const prod = await res.json();
                     return { ...prod, quantity: p.quantity };
@@ -39,43 +40,46 @@ export default function HistoryModal({ open, loading, history, onClose }) {
                         <div className="text-center text-gray-500">No hay compras registradas.</div>
                     ) : (
                         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-                            {history.map((h, i) => (
-                                <li key={h.id || i} className="py-2">
-                                    <div className="flex justify-between items-center">
-                                        <div>
-                                            <div className="font-semibold text-gray-900 dark:text-white">Carrito: {h.id || 'N/A'} - Estado: {h.status || 'N/A'}</div>
-                                            <div className="text-sm text-gray-700 dark:text-gray-300">Usuario: {h.userId || 'N/A'}</div>
-                                        </div>
-                                        <button
-                                            className="ml-4 px-3 py-1 rounded bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 text-sm font-medium"
-                                            onClick={async () => {
-                                                setExpanded(e => ({ ...e, [h.id]: !e[h.id] }));
-                                                if (!expanded[h.id] && Array.isArray(h.products)) {
-                                                    await fetchDetails(h.id, h.products);
-                                                }
-                                            }}
-                                        >
-                                            {expanded[h.id] ? 'Cerrar' : 'Ver productos'}
-                                        </button>
-                                    </div>
-                                    {expanded[h.id] && Array.isArray(details[h.id]) && (
-                                        <>
-                                            <ul className="mt-4 space-y-2">
-                                                {details[h.id].map((p, idx) => (
-                                                    <li key={idx} className="border-b border-gray-200 dark:border-gray-700 pb-2">
-                                                        <span className="font-semibold text-gray-900 dark:text-white">{p.title}</span>
-                                                        <span className="ml-2 text-gray-700 dark:text-gray-300">x{p.quantity}</span>
-                                                        <span className="ml-2 text-gray-700 dark:text-gray-300">${typeof p.price === 'number' ? p.price.toFixed(2) : 'N/A'}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                            <div className="mt-2 text-right font-bold text-lg text-gray-900 dark:text-white">
-                                                Total: ${details[h.id].reduce((acc, p) => acc + (p.price || 0) * (p.quantity || 0), 0).toFixed(2)}
+                            {history.map((h, i) => {
+                                const cartId = h._id || h.id || i;
+                                return (
+                                    <li key={cartId} className="py-2">
+                                        <div className="flex justify-between items-center">
+                                            <div>
+                                                <div className="font-semibold text-gray-900 dark:text-white">Carrito: {cartId} - Estado: {h.status || 'N/A'}</div>
+                                                <div className="text-sm text-gray-700 dark:text-gray-300">Usuario: {h.userId || 'N/A'}</div>
                                             </div>
-                                        </>
-                                    )}
-                                </li>
-                            ))}
+                                            <button
+                                                className="ml-4 px-3 py-1 rounded bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 text-sm font-medium"
+                                                onClick={async () => {
+                                                    setExpanded(e => ({ ...e, [cartId]: !e[cartId] }));
+                                                    if (!expanded[cartId] && Array.isArray(h.products)) {
+                                                        await fetchDetails(cartId, h.products);
+                                                    }
+                                                }}
+                                            >
+                                                {expanded[cartId] ? 'Cerrar' : 'Ver productos'}
+                                            </button>
+                                        </div>
+                                        {expanded[cartId] && Array.isArray(details[cartId]) && (
+                                            <>
+                                                <ul className="mt-4 space-y-2">
+                                                    {details[cartId].map((p, idx) => (
+                                                        <li key={p._id || p.id || idx} className="border-b border-gray-200 dark:border-gray-700 pb-2">
+                                                            <span className="font-semibold text-gray-900 dark:text-white">{p.title}</span>
+                                                            <span className="ml-2 text-gray-700 dark:text-gray-300">x{p.quantity}</span>
+                                                            <span className="ml-2 text-gray-700 dark:text-gray-300">${typeof p.price === 'number' ? p.price.toFixed(2) : 'N/A'}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                                <div className="mt-2 text-right font-bold text-lg text-gray-900 dark:text-white">
+                                                    Total: ${details[cartId].reduce((acc, p) => acc + (p.price || 0) * (p.quantity || 0), 0).toFixed(2)}
+                                                </div>
+                                            </>
+                                        )}
+                                    </li>
+                                );
+                            })}
                         </ul>
                     )}
                     <div className="flex justify-end gap-4 mt-8">
