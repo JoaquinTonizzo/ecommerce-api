@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function CreateProductModal({ open, onSave, onCancel }) {
-    const [form, setForm] = useState({
+    const initialForm = {
         title: '',
         description: '',
         code: '',
@@ -10,7 +10,13 @@ export default function CreateProductModal({ open, onSave, onCancel }) {
         stock: '',
         category: '',
         thumbnails: []
-    });
+    };
+    const [form, setForm] = useState(initialForm);
+
+    // Limpiar formulario al abrir/cerrar
+    useEffect(() => {
+        if (!open) setForm(initialForm);
+    }, [open]);
 
     if (!open) return null;
 
@@ -37,10 +43,11 @@ export default function CreateProductModal({ open, onSave, onCancel }) {
     function handleSubmit(e) {
         e.preventDefault();
         onSave(form);
+        setForm(initialForm);
     }
 
     return (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50 px-4" onClick={onCancel}>
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50 px-4" onClick={() => { setForm(initialForm); onCancel(); }}>
             <div className="relative w-full max-w-lg mx-auto" onClick={e => e.stopPropagation()}>
                 <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-8 overflow-y-auto max-h-[90vh] border border-gray-200 dark:border-gray-700">
                     <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white text-center">Crear producto</h2>
