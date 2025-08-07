@@ -235,11 +235,16 @@ export default function Cart() {
                         {products.map((p) => (
                             <li
                                 key={p._id}
-                                className="animate-fadeInDown bg-white dark:bg-gray-800 p-4 rounded shadow flex items-center justify-between"
+                                className="animate-fadeInDown bg-white dark:bg-gray-800 p-4 rounded shadow flex flex-col sm:flex-row items-center gap-4 justify-between"
                             >
-                                <div>
-                                    <h2 className="font-semibold text-lg text-gray-900 dark:text-white">{p.title}</h2>
-                                    <p className="text-gray-700 dark:text-gray-300">
+                                <img
+                                    src={p.thumbnails?.[0] || 'https://placehold.co/120x120'}
+                                    alt={p.title}
+                                    className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-md shadow-md flex-shrink-0 bg-gray-100 dark:bg-gray-900 mx-auto sm:mx-0"
+                                />
+                                <div className="flex-1 min-w-0 w-full">
+                                    <h2 className="font-semibold text-lg text-gray-900 dark:text-white truncate">{p.title}</h2>
+                                    <p className="text-gray-700 dark:text-gray-300 text-sm">
                                         Precio: ${typeof p.price === 'number' ? p.price.toFixed(2) : 'N/A'}
                                     </p>
                                     {(p.stock === 0 || p.status === false) && (
@@ -257,44 +262,38 @@ export default function Cart() {
                                         </div>
                                     )}
                                 </div>
-                                <div className="flex items-center gap-2">
+                                <div className="flex flex-row items-center gap-2 w-full sm:w-auto justify-center sm:justify-end">
                                     {(p.stock === 0 || p.status === false) ? (
                                         <button
                                             onClick={() => handleRemoveInactiveOrNoStock(p)}
-                                            className="bg-gray-300 hover:bg-red-600 text-gray-700 hover:text-white px-3 py-1 rounded"
+                                            className="bg-gray-300 hover:bg-red-600 text-gray-700 hover:text-white px-3 py-2 rounded-full shadow-md"
                                             title="Eliminar producto"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                                        </button>
-                                    ) : p.quantity > 1 ? (
-                                        <button
-                                            onClick={() => handleRemoveFromCart(p)}
-                                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                                            title="Quitar uno"
-                                        >
-                                            –
                                         </button>
                                     ) : (
-                                        <button
-                                            onClick={() => handleRemoveFromCart(p)}
-                                            className="bg-gray-300 hover:bg-red-600 text-gray-700 hover:text-white px-3 py-1 rounded"
-                                            title="Eliminar producto"
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                                        </button>
-                                    )}
-                                    <span className="px-2 text-sm font-semibold text-gray-900 dark:text-white min-w-[2ch] text-center">{p.quantity}u</span>
-                                    {(p.stock > 0 && p.status !== false) && (
-                                        <button
-                                            onClick={() => handleAddToCart(p)}
-                                            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
-                                            title="Agregar uno"
-                                        >
-                                            +
-                                        </button>
+                                        <>
+                                            <button
+                                                onClick={() => handleRemoveFromCart(p)}
+                                                className={`rounded-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white h-9 w-9 flex items-center justify-center shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-400`}
+                                                title={p.quantity > 1 ? "Quitar uno" : "Eliminar producto"}
+                                            >
+                                                {p.quantity > 1 ? '–' : <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>}
+                                            </button>
+                                            <span className="font-bold text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900 border border-blue-300 dark:border-blue-700 rounded-full px-3 py-2 text-base shadow-sm text-center min-w-[40px]">
+                                                {p.quantity}
+                                            </span>
+                                            <button
+                                                onClick={() => handleAddToCart(p)}
+                                                className="rounded-full bg-gradient-to-r from-blue-600 to-purple-500 hover:from-blue-700 hover:to-purple-600 text-white h-9 w-9 flex items-center justify-center shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                title="Agregar uno"
+                                            >
+                                                +
+                                            </button>
+                                        </>
                                     )}
                                 </div>
-                                <span className="px-2 font-semibold text-gray-900 dark:text-white">
+                                <span className="px-2 font-semibold text-gray-900 dark:text-white text-base">
                                     ${(p.price * p.quantity).toFixed(2)}
                                 </span>
                             </li>
@@ -376,8 +375,13 @@ export default function Cart() {
                                             {expanded && (
                                                 <ul className="mt-4 space-y-2">
                                                     {(carrito.productos || []).map((p, idx) => (
-                                                        <li key={p._id || idx} className="border-b border-gray-200 dark:border-gray-700 pb-2">
-                                                            <span className="font-semibold text-gray-900 dark:text-white">{p.title}</span>
+                                                        <li key={p._id || idx} className="flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 pb-2">
+                                                            <img
+                                                                src={p.thumbnails?.[0] || 'https://placehold.co/80x80'}
+                                                                alt={p.title}
+                                                                className="w-12 h-12 object-cover rounded-md shadow bg-gray-100 dark:bg-gray-900 flex-shrink-0"
+                                                            />
+                                                            <span className="font-semibold text-gray-900 dark:text-white truncate">{p.title}</span>
                                                             <span className="ml-2 text-gray-700 dark:text-gray-300">x{p.quantity}</span>
                                                             <span className="ml-2 text-gray-700 dark:text-gray-300">${typeof p.price === 'number' ? p.price.toFixed(2) : 'N/A'}</span>
                                                         </li>
