@@ -22,6 +22,7 @@ export default function AdminPanel() {
     const [showHistory, setShowHistory] = useState(false);
     const [history, setHistory] = useState([]);
     const [loadingHistory, setLoadingHistory] = useState(false);
+    const [showActivos, setShowActivos] = useState(true);
     const navigate = useNavigate();
 
     async function handleShowHistory() {
@@ -29,7 +30,6 @@ export default function AdminPanel() {
         setLoadingHistory(true);
         try {
             const token = localStorage.getItem('token');
-            // Si tienes un endpoint global, cámbialo aquí. Si no, usa el de usuario actual.
             const res = await fetch('http://localhost:8080/api/carts/paid', {
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -106,17 +106,41 @@ export default function AdminPanel() {
     async function confirmDelete() {
         try {
             const token = localStorage.getItem('token');
+            // Cambia el estado a inactivo en vez de eliminar
             const res = await fetch(`http://localhost:8080/api/products/${deleteId}`, {
-                method: 'DELETE',
-                headers: { Authorization: `Bearer ${token}` },
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ status: false }),
             });
             if (!res.ok) throw new Error('Error al eliminar');
-            setProducts(products.filter(p => p.id !== deleteId));
+            setProducts(products.map(p => p.id === deleteId ? { ...p, status: false } : p));
         } catch {
             alert('No se pudo eliminar el producto');
         } finally {
             setShowConfirm(false);
             setDeleteId(null);
+        }
+    }
+
+    async function handleReactivate(id) {
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`http://localhost:8080/api/products/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ status: true }),
+            });
+            if (!res.ok) throw new Error('Error al reactivar');
+            setProducts(products.map(p => p.id === id ? { ...p, status: true } : p));
+            toast.success('Producto reactivado');
+        } catch {
+            toast.error('No se pudo reactivar el producto');
         }
     }
 
@@ -192,9 +216,15 @@ export default function AdminPanel() {
                 >
                     Ver historial de compras
                 </button>
+                <button
+                    onClick={() => setShowActivos(a => !a)}
+                    className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded font-semibold"
+                >
+                    {showActivos ? 'Ver inactivos' : 'Ver activos'}
+                </button>
             </div>
             <ul className="space-y-4 max-w-3xl mx-auto">
-                {products.map((p) => (
+                {products.filter(p => showActivos ? p.status : !p.status).map((p) => (
                     <li key={p.id} className="bg-white dark:bg-gray-800 p-4 rounded shadow flex justify-between items-center">
                         <div>
                             <h2 className="font-semibold text-lg text-gray-900 dark:text-white">{p.title}</h2>
@@ -204,15 +234,25 @@ export default function AdminPanel() {
                             <button
                                 onClick={() => handleEdit(p)}
                                 className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-1 rounded"
+                                style={{ display: p.status ? 'inline-block' : 'none' }}
                             >
                                 Editar
                             </button>
-                            <button
-                                onClick={() => handleDelete(p.id)}
-                                className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded"
-                            >
-                                Eliminar
-                            </button>
+                            {p.status ? (
+                                <button
+                                    onClick={() => handleDelete(p.id)}
+                                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded"
+                                >
+                                    Eliminar
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => handleReactivate(p.id)}
+                                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded"
+                                >
+                                    Reactivar
+                                </button>
+                            )}
                         </div>
                     </li>
                 ))}
