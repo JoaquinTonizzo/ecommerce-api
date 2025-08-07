@@ -1,7 +1,6 @@
 import express from 'express';
-import fs from 'fs';
 import bcrypt from 'bcryptjs';
-import { v4 as uuidv4 } from 'uuid';
+import User from '../models/User.js';
 import { authenticateToken, isAdmin } from '../middlewares/auth.js';
 
 const router = express.Router();
@@ -20,30 +19,31 @@ router.post('/create-admin', authenticateToken, isAdmin, async (req, res) => {
   }
 
   try {
-    const data = fs.readFileSync(USERS_FILE, 'utf-8');
-    const users = JSON.parse(data);
-
-    if (users.some(u => u.email === email)) {
+    // Verificar si el usuario ya existe en MongoDB
+    const existing = await User.findOne({ email });
+    if (existing) {
       return res.status(409).json({ error: 'El usuario ya existe' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = {
-      id: uuidv4(),
+    const newUser = new User({
       email,
       password: hashedPassword,
       firstName,
       lastName,
       role
-    };
-
-    users.push(newUser);
-    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+    });
+    await newUser.save();
 
     res.status(201).json({
       message: `Usuario ${role} creado correctamente`,
-      user: { ...newUser, password: undefined } // ocultamos el hash por seguridad
+      user: {
+        _id: newUser._id,
+        email: newUser.email,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        role: newUser.role
+      }
     });
   } catch (error) {
     res.status(500).json({ error: 'Error al crear el usuario' });
