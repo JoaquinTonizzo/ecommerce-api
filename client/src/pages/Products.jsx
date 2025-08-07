@@ -1,7 +1,8 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useContext } from 'react';
 import ProductModal from './../components/ProductModal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { UserContext } from '../context/UserContext';
 
 export default function Products() {
     const [productos, setProductos] = useState([]);
@@ -11,6 +12,8 @@ export default function Products() {
     const [cartInfo, setCartInfo] = useState({ cartId: null, items: {} }); // { cartId, items: { [productId]: quantity } }
     const API_URL = import.meta.env.VITE_API_URL;
     const modalRef = useRef();
+    const { user } = useContext(UserContext);
+    const isAdmin = user?.role === 'admin';
 
     useEffect(() => {
         async function fetchProductos() {
@@ -112,6 +115,10 @@ export default function Products() {
     }
 
     async function handleAddToCart(producto) {
+        if (isAdmin) {
+            toast.error('Los administradores no pueden agregar productos al carrito');
+            return;
+        }
         const token = localStorage.getItem('token');
         if (!token) {
             toast.error('Debes iniciar sesión para agregar productos al carrito');
@@ -148,6 +155,10 @@ export default function Products() {
     }
 
     async function handleRemoveFromCart(producto) {
+        if (isAdmin) {
+            toast.error('Los administradores no pueden quitar productos del carrito');
+            return;
+        }
         const token = localStorage.getItem('token');
         const cantidadActual = cartInfo.items[producto.id] || 0;
         if (!token || !cartInfo.cartId || cantidadActual < 1) return;
@@ -200,6 +211,7 @@ export default function Products() {
                 {productos.filter(producto => producto.status).map((producto) => {
                     const cantidad = cartInfo.items[producto.id] || 0;
                     const sinStock = !producto.stock || Number(producto.stock) <= 0;
+                    const disableCartActions = isAdmin || sinStock;
                     return (
                         <div
                             key={producto.id}
@@ -226,11 +238,18 @@ export default function Products() {
                                         <button
                                             onClick={e => {
                                                 e.stopPropagation();
+                                                if (isAdmin) {
+                                                    toast.error('Los administradores no pueden generar pedidos');
+                                                    return;
+                                                }
+                                                if (cantidad < 1) {
+                                                    toast.error('No puedes quitar productos si la cantidad es 0');
+                                                    return;
+                                                }
                                                 handleRemoveFromCart(producto);
                                             }}
-                                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded disabled:opacity-50"
-                                            disabled={cantidad < 1}
-                                            title="Quitar uno"
+                                            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                                            title={isAdmin ? "Los administradores no pueden generar pedidos" : cantidad < 1 ? "No puedes quitar productos si la cantidad es 0" : "Quitar uno"}
                                         >
                                             –
                                         </button>
@@ -238,10 +257,14 @@ export default function Products() {
                                         <button
                                             onClick={e => {
                                                 e.stopPropagation();
+                                                if (isAdmin) {
+                                                    toast.error('Los administradores no pueden generar pedidos');
+                                                    return;
+                                                }
                                                 handleAddToCart(producto);
                                             }}
                                             className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded"
-                                            title="Agregar uno"
+                                            title={isAdmin ? "Los administradores no pueden generar pedidos" : "Agregar uno"}
                                         >
                                             +
                                         </button>
