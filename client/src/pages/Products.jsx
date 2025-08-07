@@ -334,7 +334,7 @@ export default function Products() {
                                 onClick={() => setProductoSeleccionado(producto)}
                             >
                                 {sinStock && (
-                                    <span className="absolute top-2 left-2 bg-red-500 text-white px-2 py-0.5 rounded font-bold text-[10px] shadow-sm">SIN STOCK</span>
+                                    <span className="absolute top-2 left-2 bg-red-500 text-white px-2 py-0.5 rounded font-bold text-[10px] shadow-sm z-20 pointer-events-none">SIN STOCK</span>
                                 )}
                                 <div className="flex flex-col sm:flex-col gap-3 items-center h-full w-full">
                                     <img
