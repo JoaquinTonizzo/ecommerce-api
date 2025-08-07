@@ -93,16 +93,6 @@ export default function EditProductModal({ open, product, onSave, onCancel }) {
                         <label className="block text-gray-700 dark:text-gray-300 mb-1 font-semibold">Precio</label>
                         <input name="price" type="number" step="0.01" min="0" value={form.price === 0 ? 0 : form.price || ''} onChange={handleChange} className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white" />
                     </div>
-                    {/* Estado: solo mostrar si no es edición */}
-                    {/*
-                    <div className="mb-4">
-                        <label className="block text-gray-700 dark:text-gray-300 mb-1 font-semibold">Estado</label>
-                        <select name="status" value={form.status ? 'true' : 'false'} onChange={handleChange} className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white">
-                            <option value="true">Activo</option>
-                            <option value="false">Inactivo</option>
-                        </select>
-                    </div>
-                    */}
                     <div className="mb-4">
                         <label className="block text-gray-700 dark:text-gray-300 mb-1 font-semibold">Stock</label>
                         <input name="stock" type="number" min="0" value={form.stock === 0 ? 0 : form.stock || ''} onChange={handleChange} className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white" />

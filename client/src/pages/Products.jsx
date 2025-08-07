@@ -12,6 +12,7 @@ export default function Products() {
     const [cartInfo, setCartInfo] = useState({ cartId: null, items: {} }); // { cartId, items: { [productId]: quantity } }
     const API_URL = import.meta.env.VITE_API_URL;
     const modalRef = useRef();
+    const cartCreatedRef = useRef(false); // Ref para controlar creación de carrito
     const { user } = useContext(UserContext);
     const isAdmin = user?.role === 'admin';
 
@@ -46,7 +47,7 @@ export default function Products() {
 
                 // Buscar carrito en progreso o crear uno
                 let carritoEnProgreso = history.find(c => c.status !== 'paid');
-                if (!carritoEnProgreso) {
+                if (!carritoEnProgreso && !cartCreatedRef.current) {
                     const createRes = await fetch(`${API_URL}/api/carts`, {
                         method: 'POST',
                         headers: { Authorization: `Bearer ${token}` },
@@ -54,26 +55,29 @@ export default function Products() {
                     const nuevoCarrito = await createRes.json();
                     if (!createRes.ok) throw new Error(nuevoCarrito.error || 'Error al crear carrito');
                     carritoEnProgreso = nuevoCarrito;
+                    cartCreatedRef.current = true; // Marcar que ya se creó el carrito
                 }
 
                 // Obtener productos del carrito
-                const cartRes = await fetch(`${API_URL}/api/carts/${carritoEnProgreso._id}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                const cartProducts = await cartRes.json();
-                if (!cartRes.ok) throw new Error(cartProducts.error || 'Error al obtener productos del carrito');
+                if (carritoEnProgreso) {
+                    const cartRes = await fetch(`${API_URL}/api/carts/${carritoEnProgreso._id}`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+                    const cartProducts = await cartRes.json();
+                    if (!cartRes.ok) throw new Error(cartProducts.error || 'Error al obtener productos del carrito');
 
-                // Mapear cantidades
-                const items = {};
-                for (const p of cartProducts) {
-                    let prodId = p.productId;
-                    if (typeof prodId === 'object' && prodId !== null) {
-                        prodId = prodId._id || prodId.id || prodId.toString();
+                    // Mapear cantidades
+                    const items = {};
+                    for (const p of cartProducts) {
+                        let prodId = p.productId;
+                        if (typeof prodId === 'object' && prodId !== null) {
+                            prodId = prodId._id || prodId.id || prodId.toString();
+                        }
+                        if (!prodId) prodId = p._id;
+                        items[prodId] = p.quantity;
                     }
-                    if (!prodId) prodId = p._id;
-                    items[prodId] = p.quantity;
+                    setCartInfo({ cartId: carritoEnProgreso._id, items });
                 }
-                setCartInfo({ cartId: carritoEnProgreso._id, items });
             } catch (err) {
                 // No mostrar error si no hay carrito
             }

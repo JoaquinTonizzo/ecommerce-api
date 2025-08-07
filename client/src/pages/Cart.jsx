@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { UserContext } from '../context/UserContext.jsx';
@@ -16,6 +16,7 @@ export default function Cart() {
     const [error, setError] = useState(null);
     const token = localStorage.getItem('token');
     const API_URL = import.meta.env.VITE_API_URL;
+    const cartCreatedRef = useRef(false); // Ref para controlar creación de carrito
 
     useEffect(() => {
         // Redirigir si no hay usuario o si es admin
@@ -62,37 +63,40 @@ export default function Cart() {
                 const history = await historyRes.json();
                 if (!historyRes.ok) throw new Error(history.error || 'Error al obtener historial');
 
-                const carritoEnProgreso = history.find((c) => c.status === 'in_progress');
-
+                let carritoEnProgreso = history.find((c) => c.status === 'in_progress');
                 let carritoId;
 
-                if (carritoEnProgreso) {
-                    carritoId = carritoEnProgreso._id;
-                } else {
-                    // Crear nuevo carrito
+                if (!carritoEnProgreso && !cartCreatedRef.current) {
+                    // Crear nuevo carrito solo una vez
                     const createRes = await fetch(`${API_URL}/api/carts/`, {
                         method: 'POST',
                         headers: { Authorization: `Bearer ${token}` },
                     });
                     const nuevoCarrito = await createRes.json();
                     if (!createRes.ok) throw new Error(nuevoCarrito.error || 'Error al crear carrito');
-                    carritoId = nuevoCarrito._id;
+                    carritoEnProgreso = nuevoCarrito;
+                    cartCreatedRef.current = true;
                 }
 
-                setCartId(carritoId);
+                if (carritoEnProgreso) {
+                    carritoId = carritoEnProgreso._id;
+                    setCartId(carritoId);
 
-                // Obtener productos (ids y cantidades) del carrito
-                const productosRes = await fetch(`${API_URL}/api/carts/${carritoId}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                const productosInCart = await productosRes.json();
-                console.log('Productos en carrito:', productosInCart);
-                if (!productosRes.ok) throw new Error(productosInCart.error || 'Error al cargar carrito');
+                    // Obtener productos (ids y cantidades) del carrito
+                    const productosRes = await fetch(`${API_URL}/api/carts/${carritoId}`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+                    const productosInCart = await productosRes.json();
+                    console.log('Productos en carrito:', productosInCart);
+                    if (!productosRes.ok) throw new Error(productosInCart.error || 'Error al cargar carrito');
 
-                // Obtener detalles completos de productos y añadir cantidades
-                const productosConDetalles = await fetchProductDetails(productosInCart);
+                    // Obtener detalles completos de productos y añadir cantidades
+                    const productosConDetalles = await fetchProductDetails(productosInCart);
 
-                setProducts(productosConDetalles);
+                    setProducts(productosConDetalles);
+                } else {
+                    setProducts([]);
+                }
             } catch (err) {
                 setError(err.message);
             } finally {
