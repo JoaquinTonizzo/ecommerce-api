@@ -187,7 +187,11 @@ export default function Cart() {
                     // carrito.products: [{ productId, quantity }]
                     const productos = await Promise.all(
                         (carrito.products || []).map(async ({ productId, quantity }) => {
-                            const res = await fetch(`${API_URL}/api/products/${productId}`);
+                            let prodId = productId;
+                            if (typeof prodId === 'object' && prodId !== null) {
+                                prodId = prodId._id || prodId.id || prodId.toString();
+                            }
+                            const res = await fetch(`${API_URL}/api/products/${prodId}`);
                             if (!res.ok) return { title: 'Producto eliminado', price: 0, quantity };
                             const prod = await res.json();
                             return { ...prod, quantity };
@@ -341,23 +345,25 @@ export default function Cart() {
                         {historialCarritos.length ? (
                             <ul className="animate-fadeInDown space-y-4">
                                 {historialCarritos.map((carrito) => {
-                                    const expanded = expandedHistorial[carrito.id];
+                                    // Usar _id como identificador y React key
+                                    const id = carrito._id || carrito.id;
+                                    const expanded = expandedHistorial[id];
                                     return (
                                         <li
-                                            key={carrito.id}
+                                            key={id}
                                             className="bg-white dark:bg-gray-800 p-4 rounded shadow"
                                         >
                                             <div className="flex justify-between items-center">
                                                 <div>
-                                                    <p className="text-gray-800 dark:text-gray-200 font-semibold">ID Pedido: {carrito.id}</p>
-                                                    <p className="text-sm text-gray-500">Productos: {carrito.products.length}</p>
+                                                    <p className="text-gray-800 dark:text-gray-200 font-semibold">ID Pedido: {id}</p>
+                                                    <p className="text-sm text-gray-500">Productos: {carrito.products?.length || carrito.productos?.length || 0}</p>
                                                     <p className="text-sm text-gray-500">Estado: {carrito.status}</p>
                                                     {carrito.paidAt && (
                                                         <p className="text-sm text-gray-500">Pagado: {new Date(carrito.paidAt).toLocaleString()}</p>
                                                     )}
                                                 </div>
                                                 <button
-                                                    onClick={() => setExpandedHistorial(e => ({ ...e, [carrito.id]: !expanded }))}
+                                                    onClick={() => setExpandedHistorial(e => ({ ...e, [id]: !expanded }))}
                                                     className="ml-4 px-3 py-1 rounded bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 text-sm font-medium"
                                                 >
                                                     {expanded ? 'Cerrar' : 'Ver productos'}
@@ -365,8 +371,8 @@ export default function Cart() {
                                             </div>
                                             {expanded && (
                                                 <ul className="mt-4 space-y-2">
-                                                    {carrito.productos.map((p, idx) => (
-                                                        <li key={idx} className="border-b border-gray-200 dark:border-gray-700 pb-2">
+                                                    {(carrito.productos || []).map((p, idx) => (
+                                                        <li key={p._id || idx} className="border-b border-gray-200 dark:border-gray-700 pb-2">
                                                             <span className="font-semibold text-gray-900 dark:text-white">{p.title}</span>
                                                             <span className="ml-2 text-gray-700 dark:text-gray-300">x{p.quantity}</span>
                                                             <span className="ml-2 text-gray-700 dark:text-gray-300">${typeof p.price === 'number' ? p.price.toFixed(2) : 'N/A'}</span>
