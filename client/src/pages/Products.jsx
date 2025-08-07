@@ -150,24 +150,40 @@ export default function Products() {
     async function handleRemoveFromCart(producto) {
         const token = localStorage.getItem('token');
         const cantidadActual = cartInfo.items[producto.id] || 0;
-        if (!token || !cartInfo.cartId || cantidadActual <= 1) return;
+        if (!token || !cartInfo.cartId || cantidadActual < 1) return;
         try {
-            const nuevaCantidad = cantidadActual - 1;
-            const res = await fetch(`http://localhost:8080/api/carts/${cartInfo.cartId}/product/${producto.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ quantity: nuevaCantidad }),
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || 'Error al actualizar cantidad');
-            setCartInfo(prev => {
-                const newItems = { ...prev.items, [producto.id]: nuevaCantidad };
-                return { ...prev, items: newItems };
-            });
-            toast.success('Cantidad actualizada');
+            if (cantidadActual === 1) {
+                // Eliminar producto del carrito
+                const res = await fetch(`http://localhost:8080/api/carts/${cartInfo.cartId}/product/${producto.id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Error al quitar producto');
+                setCartInfo(prev => {
+                    const newItems = { ...prev.items };
+                    delete newItems[producto.id];
+                    return { ...prev, items: newItems };
+                });
+                toast.success('Producto quitado del carrito');
+            } else {
+                const nuevaCantidad = cantidadActual - 1;
+                const res = await fetch(`http://localhost:8080/api/carts/${cartInfo.cartId}/product/${producto.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ quantity: nuevaCantidad }),
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Error al actualizar cantidad');
+                setCartInfo(prev => {
+                    const newItems = { ...prev.items, [producto.id]: nuevaCantidad };
+                    return { ...prev, items: newItems };
+                });
+                toast.success('Cantidad actualizada');
+            }
         } catch (err) {
             toast.error(err.message);
         }
@@ -215,7 +231,7 @@ export default function Products() {
                                         handleRemoveFromCart(producto);
                                     }}
                                     className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded disabled:opacity-50"
-                                    disabled={cantidad <= 1 || inactivo || sinStock}
+                                    disabled={cantidad < 1 || inactivo || sinStock}
                                     title="Quitar uno"
                                 >
                                     –

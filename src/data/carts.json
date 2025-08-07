@@ -135,12 +135,7 @@
   {
     "id": "9",
     "userId": "1",
-    "products": [
-      {
-        "productId": "2",
-        "quantity": 1
-      }
-    ],
+    "products": [],
     "status": "in_progress",
     "createdAt": "2025-08-06T20:25:10.942Z"
   },
@@ -164,5 +159,12 @@
     "products": [],
     "status": "in_progress",
     "createdAt": "2025-08-06T21:04:32.868Z"
+  },
+  {
+    "id": "13",
+    "userId": "3",
+    "products": [],
+    "status": "in_progress",
+    "createdAt": "2025-08-07T10:11:10.825Z"
   }
 ]
