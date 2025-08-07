@@ -20,7 +20,12 @@ export default function CreateProductModal({ open, onSave, onCancel }) {
         if (name === 'status') {
             newValue = value === 'true';
         } else if (name === 'stock' || name === 'price') {
-            newValue = value === '' ? '' : Number(value);
+            if (value === '') {
+                newValue = '';
+            } else {
+                const num = Number(value);
+                newValue = num < 0 ? 0 : num;
+            }
         }
         setForm({ ...form, [name]: newValue });
     }
@@ -53,7 +58,7 @@ export default function CreateProductModal({ open, onSave, onCancel }) {
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700 dark:text-gray-300 mb-1 font-semibold">Precio</label>
-                        <input name="price" type="number" step="0.01" value={form.price} onChange={handleChange} className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white" />
+                        <input name="price" type="number" step="0.01" min="0" value={form.price === 0 ? 0 : form.price || ''} onChange={handleChange} className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white" />
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700 dark:text-gray-300 mb-1 font-semibold">Estado</label>
@@ -64,7 +69,7 @@ export default function CreateProductModal({ open, onSave, onCancel }) {
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700 dark:text-gray-300 mb-1 font-semibold">Stock</label>
-                        <input name="stock" type="number" value={form.stock} onChange={handleChange} className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white" />
+                        <input name="stock" type="number" min="0" value={form.stock === 0 ? 0 : form.stock || ''} onChange={handleChange} className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white" />
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700 dark:text-gray-300 mb-1 font-semibold">Categoría</label>
