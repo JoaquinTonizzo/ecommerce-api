@@ -1,84 +1,47 @@
-import fs from "fs";
-import bcrypt from "bcryptjs";
+import User from '../models/User.js';
+import bcrypt from 'bcryptjs';
 
 class UserManager {
-  constructor(path) {
-    this.path = path;
-    this.users = [];
-  }
-
-  async loadUsers() {
-    if (fs.existsSync(this.path)) {
-      const data = await fs.promises.readFile(this.path, "utf-8");
-      this.users = JSON.parse(data);
-    } else {
-      this.users = [];
-    }
-  }
-
-  async saveUsers() {
-    await fs.promises.writeFile(this.path, JSON.stringify(this.users, null, 2));
-  }
-
+  // Obtiene todos los usuarios
   async getUsers() {
-    await this.loadUsers();
-    return this.users;
+    return await User.find();
   }
 
+  // Busca usuario por ID
   async getUserById(id) {
-    await this.loadUsers();
-    return this.users.find(user => user.id === id);
+    return await User.findById(id);
   }
 
+  // Busca usuario por email
   async getUserByEmail(email) {
-    await this.loadUsers();
-    return this.users.find(user => user.email === email);
+    return await User.findOne({ email });
   }
 
+  // Agrega usuario nuevo
   async addUser(userData) {
-    await this.loadUsers();
-
-    // Obtener último ID numérico para incrementar
-    const lastId = this.users.length > 0
-      ? Math.max(...this.users.map(u => parseInt(u.id)))
-      : 0;
-    const newId = (lastId + 1).toString();
-
-    const existingUser = this.users.find(user => user.email === userData.email);
+    const existingUser = await User.findOne({ email: userData.email });
     if (existingUser) {
       throw new Error('El email ya está registrado');
     }
-
-    // Hashear la contraseña antes de guardar
     const hashedPassword = await bcrypt.hash(userData.password, 10);
-
-    const newUser = {
-      id: newId,
-      email: userData.email,
+    const newUser = new User({
+      ...userData,
       password: hashedPassword,
-      firstName: userData.firstName,
-      lastName: userData.lastName,
       role: userData.role || 'user',
-      createdAt: new Date().toISOString()
-    };
-
-    this.users.push(newUser);
-    await this.saveUsers();
-
-    const { password, ...userWithoutPassword } = newUser;
+    });
+    await newUser.save();
+    const { password, ...userWithoutPassword } = newUser.toObject();
     return userWithoutPassword;
   }
 
+  // Valida usuario por email y password
   async validateUser(email, plainPassword) {
-    await this.loadUsers();
-
-    const user = this.users.find(u => u.email === email);
+    const user = await User.findOne({ email });
     if (!user) return null;
-
     const passwordMatch = await bcrypt.compare(plainPassword, user.password);
     return passwordMatch ? user : null;
   }
 }
 
-const userManager = new UserManager('./src/data/users.json');
+const userManager = new UserManager();
 export default userManager;
