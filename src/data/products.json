@@ -5,8 +5,8 @@
     "description": "Auriculares inalámbricos con cancelación de ruido",
     "code": "AUR123",
     "price": 12999.99,
-    "status": true,
-    "stock": 28,
+    "status": false,
+    "stock": 0,
     "category": "Audio",
     "thumbnails": []
   },

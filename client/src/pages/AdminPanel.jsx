@@ -106,17 +106,17 @@ export default function AdminPanel() {
     async function confirmDelete() {
         try {
             const token = localStorage.getItem('token');
-            // Cambia el estado a inactivo en vez de eliminar
+            // Cambia el estado a inactivo y el stock a 0
             const res = await fetch(`http://localhost:8080/api/products/${deleteId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ status: false }),
+                body: JSON.stringify({ status: false, stock: 0 }),
             });
             if (!res.ok) throw new Error('Error al eliminar');
-            setProducts(products.map(p => p.id === deleteId ? { ...p, status: false } : p));
+            setProducts(products.map(p => p.id === deleteId ? { ...p, status: false, stock: 0 } : p));
         } catch {
             alert('No se pudo eliminar el producto');
         } finally {

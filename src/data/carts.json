@@ -135,7 +135,12 @@
   {
     "id": "9",
     "userId": "1",
-    "products": [],
+    "products": [
+      {
+        "productId": "1",
+        "quantity": 2
+      }
+    ],
     "status": "in_progress",
     "createdAt": "2025-08-06T20:25:10.942Z"
   },
