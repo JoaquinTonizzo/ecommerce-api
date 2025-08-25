@@ -1,38 +1,84 @@
 <main>
-  <h1>Productos en tiempo real</h1>
-  <ul id="products-list" style="list-style:none; padding:0;">
+  <h2>Productos en tiempo real</h2>
+  <ul id="products-list">
     {{#each products}}
-      <li data-id="{{id}}" style="border:1px solid #ccc; margin-bottom:10px; padding:10px; display:flex; align-items:center;">
-        <img src="{{#if thumbnails}}{{thumbnails.[0]}}{{else}}https://placehold.co/250x250{{/if}}" alt="Imagen" style="width:80px; height:80px; object-fit:cover; margin-right:15px; border-radius:8px;">
-        <div style="flex:1;">
-          <strong>{{title}}</strong><br>
-          <span><b>Descripción:</b> {{description}}</span><br>
-          <span><b>Código:</b> {{code}}</span><br>
-          <span><b>Precio:</b> ${{price}}</span><br>
-          <span><b>Stock:</b> {{stock}}</span><br>
-          <span><b>Categoría:</b> {{category}}</span><br>
-          <span><b>Status:</b> {{#if status}}Activo{{else}}Inactivo{{/if}}</span>
+      <li data-id="{{id}}" class="product-item">
+        <div class="product-img-wrapper">
+          {{#if thumbnails}}
+            <img src="{{thumbnails.[0]}}" alt="Imagen" class="product-img">
+          {{else}}
+            <div class="product-img no-img" aria-label="Sin Imagen" title="Sin Imagen"></div>
+          {{/if}}
         </div>
-        <button onclick="deleteProduct('{{id}}')" style="margin-left:15px;">Eliminar</button>
+        <div class="product-info">
+          <strong class="product-title">{{title}}</strong>
+          <span class="product-desc"><b>Descripción:</b> {{description}}</span>
+          <span class="product-code"><b>Código:</b> {{code}}</span>
+          <span class="product-price"><b>Precio:</b> ${{price}}</span>
+          <span class="product-stock"><b>Stock:</b> {{stock}}</span>
+          <span class="product-category"><b>Categoría:</b> {{category}}</span>
+          <span class="product-status"><b>Status:</b> {{#if status}}Activo{{else}}Inactivo{{/if}}</span>
+        </div>
+  <button onclick="deleteProduct('{{id}}')" class="delete-btn">Eliminar</button>
       </li>
     {{/each}}
   </ul>
-  <form id="add-product-form">
-    <input type="text" name="title" placeholder="Título" required />
-    <input type="text" name="description" placeholder="Descripción" required />
-    <input type="text" name="code" placeholder="Código" required />
-    <input type="number" name="price" placeholder="Precio" required />
-    <input type="number" name="stock" placeholder="Stock" required />
-    <input type="text" name="category" placeholder="Categoría" required />
-    <input type="text" name="thumbnail" placeholder="URL de imagen" required />
-    <label>
-      <input type="checkbox" name="status" checked /> Activo
-    </label>
-    <button type="submit">Agregar producto</button>
-  </form>
+  <button id="toggle-form-btn" class="form-toggle-btn">Agregar nuevo producto</button>
+  <div id="form-container" class="form-container">
+    <form id="add-product-form" class="product-form">
+    <div class="form-row">
+      <label for="title">Título</label>
+  <input type="text" name="title" id="title" placeholder="Título" autocomplete="off" />
+    </div>
+    <div class="form-row">
+      <label for="description">Descripción</label>
+  <input type="text" name="description" id="description" placeholder="Descripción" autocomplete="off" />
+    </div>
+    <div class="form-row">
+      <label for="code">Código</label>
+  <input type="text" name="code" id="code" placeholder="Código" autocomplete="off" />
+    </div>
+    <div class="form-row">
+      <label for="price">Precio</label>
+  <input type="number" name="price" id="price" placeholder="Precio" autocomplete="off" oninvalid="this.setCustomValidity('')" />
+    </div>
+    <div class="form-row">
+      <label for="stock">Stock</label>
+  <input type="number" name="stock" id="stock" placeholder="Stock" autocomplete="off" oninvalid="this.setCustomValidity('')" />
+    </div>
+    <div class="form-row">
+      <label for="category">Categoría</label>
+  <input type="text" name="category" id="category" placeholder="Categoría" autocomplete="off" />
+    </div>
+    <div class="form-row">
+      <label for="thumbnail">URL de imagen</label>
+  <input type="url" name="thumbnail" id="thumbnail" placeholder="URL de imagen" autocomplete="off" />
+    </div>
+    <div class="form-row">
+      <label for="status">Activo</label>
+      <input type="checkbox" name="status" id="status" checked />
+    </div>
+    <button type="submit" class="form-btn">Agregar producto</button>
+    <div id="form-error" style="color:#d00; margin-top:8px; display:none;"></div>
+    </form>
+  </div>
 </main>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+  // Animación y despliegue del formulario
+  const toggleBtn = document.getElementById('toggle-form-btn');
+  const formContainer = document.getElementById('form-container');
+  let formVisible = false;
+  toggleBtn.addEventListener('click', () => {
+    formVisible = !formVisible;
+    if (formVisible) {
+      formContainer.classList.add('show');
+      toggleBtn.textContent = 'Ocultar formulario';
+    } else {
+      formContainer.classList.remove('show');
+      toggleBtn.textContent = 'Agregar nuevo producto';
+    }
+  });
   const socket = io();
 
   // Actualizar lista de productos en tiempo real
@@ -42,24 +88,25 @@
     products.forEach(p => {
       const li = document.createElement('li');
       li.setAttribute('data-id', p.id);
-      li.style.border = '1px solid #ccc';
-      li.style.marginBottom = '10px';
-      li.style.padding = '10px';
-      li.style.display = 'flex';
-      li.style.alignItems = 'center';
-      const imgUrl = (p.thumbnails && p.thumbnails[0]) ? p.thumbnails[0] : 'https://placehold.co/250x250';
+      li.className = 'product-item';
+      let imgHtml = '';
+      if (p.thumbnails && p.thumbnails[0]) {
+        imgHtml = `<img src="${p.thumbnails[0]}" alt="Imagen" class="product-img">`;
+      } else {
+        imgHtml = `<div class="product-img no-img" aria-label="Sin Imagen" title="Sin Imagen"></div>`;
+      }
       li.innerHTML = `
-        <img src="${imgUrl}" alt="Imagen" style="width:80px; height:80px; object-fit:cover; margin-right:15px; border-radius:8px;">
-        <div style="flex:1;">
-          <strong>${p.title}</strong><br>
-          <span><b>Descripción:</b> ${p.description || ''}</span><br>
-          <span><b>Código:</b> ${p.code || ''}</span><br>
-          <span><b>Precio:</b> $${p.price}</span><br>
-          <span><b>Stock:</b> ${p.stock}</span><br>
-          <span><b>Categoría:</b> ${p.category || ''}</span><br>
-          <span><b>Status:</b> ${p.status ? 'Activo' : 'Inactivo'}</span>
+        <div class="product-img-wrapper">${imgHtml}</div>
+        <div class="product-info">
+          <strong class="product-title">${p.title}</strong>
+          <span class="product-desc"><b>Descripción:</b> ${p.description || ''}</span>
+          <span class="product-code"><b>Código:</b> ${p.code || ''}</span>
+          <span class="product-price"><b>Precio:</b> $${p.price}</span>
+          <span class="product-stock"><b>Stock:</b> ${p.stock}</span>
+          <span class="product-category"><b>Categoría:</b> ${p.category || ''}</span>
+          <span class="product-status"><b>Status:</b> ${p.status ? 'Activo' : 'Inactivo'}</span>
         </div>
-        <button onclick="deleteProduct('${p.id}')" style="margin-left:15px;">Eliminar</button>
+  <button onclick="deleteProduct('${p.id}')" class="delete-btn">Eliminar</button>
       `;
       list.appendChild(li);
     });
@@ -68,14 +115,30 @@
   // Emitir evento para agregar producto
   document.getElementById('add-product-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    const title = this.title.value;
-    const description = this.description.value;
-    const code = this.code.value;
+    const errorDiv = document.getElementById('form-error');
+    errorDiv.style.display = 'none';
+    let errorMsg = '';
+    const title = this.title.value.trim();
+    const description = this.description.value.trim();
+    const code = this.code.value.trim();
     const price = parseFloat(this.price.value);
     const stock = parseInt(this.stock.value);
-    const category = this.category.value;
-    const thumbnail = this.thumbnail.value;
+    const category = this.category.value.trim();
+    const thumbnail = this.thumbnail.value.trim();
     const status = this.status.checked;
+    // Validaciones extra JS
+    if (title.length < 3 || title.length > 50) errorMsg = 'El título debe tener entre 3 y 50 caracteres.';
+    else if (description.length < 5 || description.length > 100) errorMsg = 'La descripción debe tener entre 5 y 100 caracteres.';
+    else if (!/^[A-Za-z0-9_-]{3,20}$/.test(code)) errorMsg = 'El código debe tener entre 3 y 20 caracteres alfanuméricos.';
+    else if (isNaN(price) || price < 1) errorMsg = 'El precio debe ser mayor a 0.';
+    else if (isNaN(stock) || stock < 0) errorMsg = 'El stock no puede ser negativo.';
+    else if (category.length < 3 || category.length > 30) errorMsg = 'La categoría debe tener entre 3 y 30 caracteres.';
+    else if (!/^https?:\/\/.+\..+/.test(thumbnail)) errorMsg = 'La URL de imagen debe ser válida.';
+    if (errorMsg) {
+      errorDiv.textContent = errorMsg;
+      errorDiv.style.display = 'block';
+      return;
+    }
     const thumbnails = [thumbnail];
     socket.emit('addProduct', {
       title,

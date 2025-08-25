@@ -30,6 +30,9 @@ const PORT = 8080;
 // Middleware para que Express entienda JSON en el body de las peticiones
 app.use(express.json());
 
+// Servir archivos estáticos desde la carpeta public
+app.use(express.static('public'));
+
 // Rutas principales de la API:
 // Todo lo que empiece con /api/products va a ser manejado por productsRouter
 app.use('/api/products', productsRouter);

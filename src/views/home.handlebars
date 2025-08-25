@@ -1,19 +1,25 @@
 <main>
-  <h1>Lista de productos</h1>
-  <ul style="list-style:none; padding:0;">
+  <h2>Lista de productos</h2>
+  <ul id="products-list">
     {{#each products}}
-      <li data-id="{{id}}" style="border:1px solid #ccc; margin-bottom:10px; padding:10px; display:flex; align-items:center;">
-        <img src="{{#if thumbnails}}{{thumbnails.[0]}}{{else}}https://placehold.co/250x250?{{/if}}" alt="Imagen" style="width:80px; height:80px; object-fit:cover; margin-right:15px; border-radius:8px;">
-        <div style="flex:1;">
-          <strong>{{title}}</strong><br>
-          <span><b>Descripción:</b> {{description}}</span><br>
-          <span><b>Código:</b> {{code}}</span><br>
-          <span><b>Precio:</b> ${{price}}</span><br>
-          <span><b>Stock:</b> {{stock}}</span><br>
-          <span><b>Categoría:</b> {{category}}</span><br>
-          <span><b>Status:</b> {{#if status}}Activo{{else}}Inactivo{{/if}}</span>
-        </div>
-      </li>
+    <li data-id="{{id}}" class="product-item">
+      <div class="product-img-wrapper">
+        {{#if thumbnails}}
+          <img src="{{thumbnails.[0]}}" alt="Imagen" class="product-img">
+        {{else}}
+          <div class="product-img no-img" aria-label="Sin Imagen" title="Sin Imagen"></div>
+        {{/if}}
+      </div>
+      <div class="product-info">
+        <strong class="product-title">{{title}}</strong>
+        <span class="product-desc"><b>Descripción:</b> {{description}}</span>
+        <span class="product-code"><b>Código:</b> {{code}}</span>
+        <span class="product-price"><b>Precio:</b> ${{price}}</span>
+        <span class="product-stock"><b>Stock:</b> {{stock}}</span>
+        <span class="product-category"><b>Categoría:</b> {{category}}</span>
+        <span class="product-status"><b>Status:</b> {{#if status}}Activo{{else}}Inactivo{{/if}}</span>
+      </div>
+    </li>
     {{/each}}
   </ul>
 </main>
