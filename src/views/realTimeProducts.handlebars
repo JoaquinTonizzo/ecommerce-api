@@ -1,0 +1,97 @@
+<main>
+  <h1>Productos en tiempo real</h1>
+  <ul id="products-list" style="list-style:none; padding:0;">
+    {{#each products}}
+      <li data-id="{{id}}" style="border:1px solid #ccc; margin-bottom:10px; padding:10px; display:flex; align-items:center;">
+        <img src="{{#if thumbnails}}{{thumbnails.[0]}}{{else}}https://placehold.co/250x250{{/if}}" alt="Imagen" style="width:80px; height:80px; object-fit:cover; margin-right:15px; border-radius:8px;">
+        <div style="flex:1;">
+          <strong>{{title}}</strong><br>
+          <span><b>Descripción:</b> {{description}}</span><br>
+          <span><b>Código:</b> {{code}}</span><br>
+          <span><b>Precio:</b> ${{price}}</span><br>
+          <span><b>Stock:</b> {{stock}}</span><br>
+          <span><b>Categoría:</b> {{category}}</span><br>
+          <span><b>Status:</b> {{#if status}}Activo{{else}}Inactivo{{/if}}</span>
+        </div>
+        <button onclick="deleteProduct('{{id}}')" style="margin-left:15px;">Eliminar</button>
+      </li>
+    {{/each}}
+  </ul>
+  <form id="add-product-form">
+    <input type="text" name="title" placeholder="Título" required />
+    <input type="text" name="description" placeholder="Descripción" required />
+    <input type="text" name="code" placeholder="Código" required />
+    <input type="number" name="price" placeholder="Precio" required />
+    <input type="number" name="stock" placeholder="Stock" required />
+    <input type="text" name="category" placeholder="Categoría" required />
+    <input type="text" name="thumbnail" placeholder="URL de imagen" required />
+    <label>
+      <input type="checkbox" name="status" checked /> Activo
+    </label>
+    <button type="submit">Agregar producto</button>
+  </form>
+</main>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+
+  // Actualizar lista de productos en tiempo real
+  socket.on('products', products => {
+    const list = document.getElementById('products-list');
+    list.innerHTML = '';
+    products.forEach(p => {
+      const li = document.createElement('li');
+      li.setAttribute('data-id', p.id);
+      li.style.border = '1px solid #ccc';
+      li.style.marginBottom = '10px';
+      li.style.padding = '10px';
+      li.style.display = 'flex';
+      li.style.alignItems = 'center';
+      const imgUrl = (p.thumbnails && p.thumbnails[0]) ? p.thumbnails[0] : 'https://placehold.co/250x250';
+      li.innerHTML = `
+        <img src="${imgUrl}" alt="Imagen" style="width:80px; height:80px; object-fit:cover; margin-right:15px; border-radius:8px;">
+        <div style="flex:1;">
+          <strong>${p.title}</strong><br>
+          <span><b>Descripción:</b> ${p.description || ''}</span><br>
+          <span><b>Código:</b> ${p.code || ''}</span><br>
+          <span><b>Precio:</b> $${p.price}</span><br>
+          <span><b>Stock:</b> ${p.stock}</span><br>
+          <span><b>Categoría:</b> ${p.category || ''}</span><br>
+          <span><b>Status:</b> ${p.status ? 'Activo' : 'Inactivo'}</span>
+        </div>
+        <button onclick="deleteProduct('${p.id}')" style="margin-left:15px;">Eliminar</button>
+      `;
+      list.appendChild(li);
+    });
+  });
+
+  // Emitir evento para agregar producto
+  document.getElementById('add-product-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const title = this.title.value;
+    const description = this.description.value;
+    const code = this.code.value;
+    const price = parseFloat(this.price.value);
+    const stock = parseInt(this.stock.value);
+    const category = this.category.value;
+    const thumbnail = this.thumbnail.value;
+    const status = this.status.checked;
+    const thumbnails = [thumbnail];
+    socket.emit('addProduct', {
+      title,
+      description,
+      code,
+      price,
+      status,
+      stock,
+      category,
+      thumbnails
+    });
+    this.reset();
+  });
+
+  // Emitir evento para eliminar producto
+  window.deleteProduct = function(id) {
+    socket.emit('deleteProduct', id);
+  };
+</script>

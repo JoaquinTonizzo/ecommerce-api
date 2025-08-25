@@ -1,2 +1,4 @@
 node_modules/
-consigna.txt
+.env
+dist/
+client/

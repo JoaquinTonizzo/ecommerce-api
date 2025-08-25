@@ -37,5 +37,18 @@
     "thumbnails": [
       "https://example.com/img/galaxy-s22.jpg"
     ]
+  },
+  {
+    "id": "4",
+    "title": "Samsung Galaxy S25",
+    "description": "Celular Samsung con pantalla AMOLED de 6.1 pulgadas y triple cámara",
+    "code": "SAM25",
+    "price": 500,
+    "status": true,
+    "stock": 12,
+    "category": "Electrónica",
+    "thumbnails": [
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8UsYMeQpuVOCWA0RJDLuMe_Pj_depmzY7gw&s"
+    ]
   }
 ]

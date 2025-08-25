@@ -68,8 +68,8 @@ class ProductManager {
 
   // Elimina un producto por ID, lanza error si no lo encuentra
   async deleteProduct(id) {
-    const products = await this.getProducts();
-    const updated = products.filter((p) => p.id !== id);
+  const products = await this.getProducts();
+  const updated = products.filter((p) => p.id !== id);
 
     if (products.length === updated.length) {
       const error = new Error("Producto no encontrado");
@@ -82,5 +82,5 @@ class ProductManager {
   }
 }
 
-const productManager = new ProductManager('../src/data/products.json');
+const productManager = new ProductManager('src/data/products.json');
 export default productManager;
