@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { connectDB } from './config/db.js';
+import cors from 'cors'; // <--- IMPORTANTE
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,15 +24,14 @@ import { errorHandler } from './middlewares/error-handler.js';
 // Creamos la app
 const app = express();
 
-// Habilitar CORS para permitir peticiones desde el frontend Angular
-import cors from 'cors';
+// Habilitar CORS
 app.use(cors({ origin: 'http://localhost:5173' }));
 
-// Puerto desde variables de entorno
-const PORT = process.env.PORT;
-
-// Middleware para que Express entienda JSON
+// Middleware para JSON
 app.use(express.json());
+
+// Puerto desde variables de entorno
+const PORT = process.env.PORT || 3000;
 
 // Rutas de la API
 app.use('/api/products', productsRouter);
@@ -39,12 +39,16 @@ app.use('/api/carts', cartsRouter);
 app.use('/api/auth', loginRouter);
 app.use('/api/admin', adminRoutes);
 
-// Ruta de prueba
-app.get('/', (req, res) => {
-  res.send('API funcionando correctamente 🚀');
+// === Servir el front construido de Vite ===
+const clientBuildPath = path.join(__dirname, '../client/dist');
+app.use(express.static(clientBuildPath));
+
+// Ruta catch-all para SPA
+app.get('*', (req, res) => {
+  res.sendFile(path.join(clientBuildPath, 'index.html'));
 });
 
-// Middleware global de errores (debe ir al final del flujo)
+// Middleware global de errores
 app.use(errorHandler);
 
 // Arrancamos el servidor
