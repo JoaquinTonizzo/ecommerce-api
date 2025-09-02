@@ -1,59 +1,52 @@
-// Importamos Express
 import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { connectDB } from './config/db.js';
-import cors from 'cors'; // <--- IMPORTANTE
+import cors from 'cors';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Lee el .env desde la raíz del proyecto
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
-
-// Importamos los enrutadores
 import productsRouter from './routes/products.routes.js';
 import cartsRouter from './routes/carts.routes.js';
 import loginRouter from './routes/login.routes.js';
 import adminRoutes from './routes/admin.routes.js';
-
-// Middleware de manejo de errores
 import { errorHandler } from './middlewares/error-handler.js';
 
-// Creamos la app
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
 const app = express();
 
-// Habilitar CORS
-app.use(cors({ origin: '*' }));
-
-// Middleware para JSON
+// Middleware
+app.use(cors()); 
 app.use(express.json());
 
-// Puerto desde variables de entorno
-const PORT = process.env.PORT || 3000;
-
-// Rutas de la API
+// Rutas API
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/api/auth', loginRouter);
 app.use('/api/admin', adminRoutes);
 
-// === Servir el front construido de Vite ===
+// Servir front
 const clientBuildPath = path.join(__dirname, '../client/dist');
+// Servir archivos estáticos
 app.use(express.static(clientBuildPath));
 
-// Ruta catch-all para SPA
-app.get('*', (req, res) => {
+// Catch-all para cualquier otra ruta que no sea API
+app.get(/^(?!\/api).*/, (req, res) => {
   res.sendFile(path.join(clientBuildPath, 'index.html'));
 });
 
-// Middleware global de errores
+
+
+// Error handler
 app.use(errorHandler);
 
-// Arrancamos el servidor
+// Arrancar servidor
+const PORT = process.env.PORT || 3000;
 connectDB().then(() => {
   app.listen(PORT, () => {
-    console.log(`✅ Servidor escuchando en http://localhost:${PORT}`);
+    console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
   });
 });
