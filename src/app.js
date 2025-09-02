@@ -25,7 +25,7 @@ import { errorHandler } from './middlewares/error-handler.js';
 const app = express();
 
 // Habilitar CORS
-app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(cors({ origin: '*' }));
 
 // Middleware para JSON
 app.use(express.json());
