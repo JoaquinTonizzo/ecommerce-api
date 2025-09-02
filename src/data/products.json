@@ -6,11 +6,9 @@
     "code": "AUR123",
     "price": 12999.99,
     "status": true,
-    "stock": 50,
+    "stock": 100,
     "category": "Audio",
-    "thumbnails": [
-      "https://placehold.co/250x250"
-    ]
+    "thumbnails": []
   },
   {
     "id": "2",
@@ -19,11 +17,9 @@
     "code": "AURC123",
     "price": 5999.99,
     "status": true,
-    "stock": 20,
+    "stock": 100,
     "category": "Audio",
-    "thumbnails": [
-      "https://placehold.co/250x250"
-    ]
+    "thumbnails": []
   },
   {
     "id": "3",
@@ -32,10 +28,74 @@
     "code": "SAM22",
     "price": 329999,
     "status": true,
-    "stock": 15,
+    "stock": 100,
     "category": "Electrónica",
-    "thumbnails": [
-      "https://placehold.co/250x250"
-    ]
+    "thumbnails": []
+  },
+  {
+    "id": "4",
+    "title": "Laptop Gamer XYZ",
+    "description": "Laptop potente con procesador Intel i7 y tarjeta gráfica RTX 3060",
+    "code": "LAPG123",
+    "price": 159999,
+    "status": true,
+    "stock": 100,
+    "category": "Computación",
+    "thumbnails": []
+  },
+  {
+    "id": "5",
+    "title": "Monitor 27 pulgadas 4K",
+    "description": "Monitor UHD con alta fidelidad de color para diseño gráfico",
+    "code": "MON27UHD",
+    "price": 49999.99,
+    "status": true,
+    "stock": 100,
+    "category": "Computación",
+    "thumbnails": []
+  },
+  {
+    "id": "6",
+    "title": "Teclado Mecánico RGB",
+    "description": "Teclado con switches táctiles y retroiluminación RGB personalizable",
+    "code": "TECMECRGB",
+    "price": 8999.99,
+    "status": true,
+    "stock": 100,
+    "category": "Accesorios",
+    "thumbnails": []
+  },
+  {
+    "id": "7",
+    "title": "Mouse Inalámbrico Ergonomico",
+    "description": "Mouse con diseño ergonómico y conexión bluetooth estable",
+    "code": "MOUERGO",
+    "price": 5999.99,
+    "status": true,
+    "stock": 11,
+    "category": "Accesorios",
+    "thumbnails": []
+  },
+  {
+    "id": "8",
+    "title": "Smartwatch Deportivo",
+    "description": "Reloj inteligente con monitor de ritmo cardíaco y GPS integrado",
+    "code": "SMRTWCH",
+    "price": 19999.99,
+    "status": true,
+    "stock": 100,
+    "category": "Wearables",
+    "thumbnails": []
+  },
+  {
+    "id": "9",
+    "title": "Cámara de Seguridad IP",
+    "description": "Cámara con visión nocturna y conectividad Wi-Fi",
+    "code": "CAMIPSEC",
+    "price": 7499.99,
+    "status": true,
+    "stock": 100,
+    "category": "Seguridad",
+    "thumbnails": []
   }
 ]

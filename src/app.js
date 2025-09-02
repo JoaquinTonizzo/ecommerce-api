@@ -1,19 +1,26 @@
-// Importamos Express (framework del servidor)
+// Importamos Express
 import express from 'express';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { connectDB } from './config/db.js';
 
-// Importamos los enrutadores (rutas separadas por responsabilidad)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Lee el .env desde la raíz del proyecto
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
+// Importamos los enrutadores
 import productsRouter from './routes/products.routes.js';
 import cartsRouter from './routes/carts.routes.js';
-import viewsRouter from './routes/views.routes.js';
+import loginRouter from './routes/login.routes.js';
+import adminRoutes from './routes/admin.routes.js';
 
-// Importamos el middleware de manejo de errores personalizado
+// Middleware de manejo de errores
 import { errorHandler } from './middlewares/error-handler.js';
 
-import { engine } from 'express-handlebars';
-import http from 'http';
-import { Server } from 'socket.io';
-import productManager from './managers/ProductManager.js';
-
+// Creamos la app
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
@@ -24,31 +31,35 @@ app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', './src/views');
 
-// Definimos el puerto en el que va a escuchar el servidor
-const PORT = 8080;
+// Habilitar CORS para permitir peticiones desde el frontend Angular
+import cors from 'cors';
+app.use(cors({ origin: 'http://localhost:5173' }));
 
-// Middleware para que Express entienda JSON en el body de las peticiones
+// Puerto desde variables de entorno
+const PORT = process.env.PORT;
+
+// Middleware para que Express entienda JSON
 app.use(express.json());
 
-// Servir archivos estáticos desde la carpeta public
-app.use(express.static('public'));
-
-// Rutas principales de la API:
-// Todo lo que empiece con /api/products va a ser manejado por productsRouter
+// Rutas de la API
 app.use('/api/products', productsRouter);
-
-// Todo lo que empiece con /api/carts va a ser manejado por cartsRouter
 app.use('/api/carts', cartsRouter);
+app.use('/api/auth', loginRouter);
+app.use('/api/admin', adminRoutes);
 
-// Router para vistas
-app.use('/', viewsRouter);
+// Ruta de prueba
+app.get('/', (req, res) => {
+  res.send('API funcionando correctamente 🚀');
+});
 
-// Middleware de manejo de errores personalizado. SIEMPRE después de las rutas
+// Middleware global de errores (debe ir al final del flujo)
 app.use(errorHandler);
 
-// Iniciamos el servidor y lo ponemos a escuchar en el puerto indicado
-server.listen(PORT, () => {
-  console.log(`Servidor escuchando en http://localhost:${PORT}`);
+// Arrancamos el servidor
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`✅ Servidor escuchando en http://localhost:${PORT}`);
+  });
 });
 
 io.on('connection', async (socket) => {
