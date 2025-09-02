@@ -10,14 +10,14 @@ Proyecto de e-commerce desarrollado con **Node.js, Express y React + Vite**, con
 - 💼 Panel de administración avanzado  
 - 🔍 Filtros de búsqueda y ordenamiento de productos  
 - 📄 Persistencia de datos en **MongoDB Atlas**  
-- 🖥️ Frontend SPA moderno con navegación fluida, formularios validados y diseño responsive  
+- 🖥️ Frontend moderno con navegación fluida, formularios validados y diseño responsive  
 
 ## Tecnologías
 
 - Backend: Node.js, Express  
 - Frontend: React + Vite  
 - Base de datos: MongoDB Atlas  
-- Deployment: Render (backend y frontend en el mismo dominio)  
+- Deployment: Render
 - Otros: dotenv, cors  
 
 ## Despliegue
