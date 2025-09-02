@@ -22,14 +22,6 @@ import { errorHandler } from './middlewares/error-handler.js';
 
 // Creamos la app
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
-const manager = productManager;
-
-// Handlebars setup
-app.engine('handlebars', engine());
-app.set('view engine', 'handlebars');
-app.set('views', './src/views');
 
 // Habilitar CORS para permitir peticiones desde el frontend Angular
 import cors from 'cors';
@@ -61,23 +53,3 @@ connectDB().then(() => {
     console.log(`✅ Servidor escuchando en http://localhost:${PORT}`);
   });
 });
-
-io.on('connection', async (socket) => {
-  socket.emit('products', await manager.getProducts());
-
-  socket.on('addProduct', async (data) => {
-    await manager.addProduct(data);
-    io.emit('products', await manager.getProducts());
-  });
-
-  socket.on('deleteProduct', async (id) => {
-    try {
-      await manager.deleteProduct(id);
-      io.emit('products', await manager.getProducts());
-    } catch (error) {
-      socket.emit('error', { message: error.message, status: error.status || 500 });
-    }
-  });
-});
-
-export { io };
